@@ -3,18 +3,15 @@
 
 (def pg-db {:dbtype "postgresql"
             :dbname "clark"
-            :host "localhost"})
+            :host "localhost"
+            :port 5432})
 
-(def location-table-ddl
-  (jdbc/create-table-ddl :locations [[:building "varchar(32)"]
-                                     [:number :int]]))
+(defn query [query]
+  (jdbc/query pg-db [query]))
 
-(comment
-  ;Create table
-  (jdbc/db-do-commands pg-db location-table-ddl)
+(defn insert [table data]
+  (first
+   (jdbc/insert! pg-db table data)))
 
-  ;Create data
-  (jdbc/insert! pg-db :locations {:building "Г" :number 406})
-
-  ;Get data
-  (jdbc/query pg-db ["SELECT * FROM locations"]))
+(defn create-table [table schema]
+  (jdbc/create-table-ddl table schema))

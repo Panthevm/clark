@@ -10,7 +10,7 @@
   (-> (api handler/handler)
       (wrap-json-params)
       (wrap-json-response)
-      (wrap-cors :access-control-allow-origin [#"http://127.0.0.1:5500"]
+      (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :put :post :delete])))
 
 (defn start [port]

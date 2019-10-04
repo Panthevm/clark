@@ -9,15 +9,15 @@
     "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]])
 
 ;GET /locations
-(defn get []
+(defn get! []
   (db/query "SELECT * FROM locations"))
 
 ;POST /locations
-(defn insert [building number]
+(defn insert! [building number]
   (db/insert :locations {:building building
                          :number number}))
 
-(defn drop []
+(defn drop! []
   (db/do-commands
    (db/drop-table :locations)))
 

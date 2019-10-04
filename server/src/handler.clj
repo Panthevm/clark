@@ -6,8 +6,8 @@
 
 (defn location-routes []
   (context "/locations" []
-           (GET  "/" []                (response (location/get)))
-           (POST "/" [building number] (response (location/insert building number)))))
+           (GET  "/" []                (response (location/get!)))
+           (POST "/" [building number] (response (location/insert! building number)))))
 
 (defroutes handler
   (location-routes)

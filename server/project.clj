@@ -10,6 +10,5 @@
                  [compojure "1.6.1"]]
   :plugins [[lein-ring "0.12.5"]]
   :ring {:handler app/app
-         :nrepl {:start? true
-                 :port 9998}})
+         :init migration/migration})
 

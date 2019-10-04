@@ -15,3 +15,9 @@
 
 (defn create-table [table schema]
   (jdbc/create-table-ddl table schema))
+
+(defn drop-table [table]
+  (jdbc/drop-table-ddl table))
+
+(defn do-commands [fn]
+  (jdbc/db-do-commands pg-db fn))

@@ -1,7 +1,7 @@
 (ns handler
   (:use ring.util.response)
-  (:require [compojure.route :as route]
-            [compojure.core :refer :all]
+  (:require [compojure.route    :as route]
+            [compojure.core     :refer :all]
             [resources.location :as location]))
 
 (defn location-routes []

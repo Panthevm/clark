@@ -1,12 +1,13 @@
 (ns resources.location
-  (:use ring.util.response)
-  (:require [db :as db]
-            [compojure.core :refer :all]))
+  (:require [db :as db]))
 
-;Shema
 (def table-ddl
-  (db/create-table :locations [[:building "varchar(32)"]
-                               [:number :int]]))
+  [[:id :serial "PRIMARY KEY"]
+   [:building "varchar(32)"]
+   [:number :int]
+   [:created_at :timestamp
+    "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]])
+
 ;GET /locations
 (defn get []
   (db/query "SELECT * FROM locations"))
@@ -16,4 +17,7 @@
   (db/insert :locations {:building building
                          :number number}))
 
+(defn drop []
+  (db/do-commands
+   (db/drop-table :locations)))
 

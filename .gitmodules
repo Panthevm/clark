@@ -1,0 +1,6 @@
+[submodule "ui/zenform"]
+	path = ui/zenform
+	url = https://github.com/HealthSamurai/zenform.git
+[submodule "ui/chrono"]
+	path = ui/chrono
+	url = https://github.com/HealthSamurai/chrono.git

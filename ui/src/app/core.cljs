@@ -7,7 +7,7 @@
             [zframes.xhr]
             [zframes.window-location]
 
-            [app.post.view]
+            [app.location.view]
             [app.index.view]
 
             [app.helpers]

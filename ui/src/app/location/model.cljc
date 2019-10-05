@@ -1,9 +1,9 @@
-(ns app.post.model
+(ns app.location.model
   (:require [re-frame.core :as rf]
             [app.helpers :as helpers]
             [clojure.string :as str]))
 
-(def index-page   ::index)
+(def index-page ::index)
 
 (rf/reg-event-fx
  index-page

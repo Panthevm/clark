@@ -1,26 +1,37 @@
 (ns app.layout
-  (:require [re-frame.core :as rf]
+  (:require [reagent-material-ui.core :as ui]
+            [re-frame.core :as rf]
             [reagent.core :as r]
             [app.styles :as styles]
             [zframes.flash :as flashes]
             [zframes.modal :as modal]
             [app.helpers :as helpers]
             [clojure.string :as str]))
+(def el r/as-element)
+(defn color [nme] (aget ui/colors nme))
+(defn icon [nme] [ui/FontIcon {:className "material-icons"} nme])
 
+;; create a new theme based on the dark theme from Material UI
+(defonce theme-defaults {:muiTheme (ui/getMuiTheme
+                                    (-> ui/lightBaseTheme
+                                        (js->clj :keywordize-keys true)
+                                        (update :palette merge {:primary1Color (color "cyan500")
+                                                                :primary2Color (color "cyan500")})
+                                        clj->js))})
 (defn current-page
   [navs fragment]
   (->> navs
        (map
         #(if (re-find (re-pattern (:href %)) (str fragment))
-           (assoc % :class "active font-weight-bold")
+           (assoc % :active true)
           %))))
 
 (rf/reg-sub
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment _]
-   (current-page [{:id "main" :href (helpers/href "/") :display "Главная страница"}
-                  {:id "post" :href (helpers/href "post") :display "Сборы"}]
+   (current-page [{:id "main" :href (helpers/href "/") :display "Главная страница" :ico  "/img/home-24px.svg"}
+                  {:id "post" :href (helpers/href "post") :display "Аудитории" :ico "/img/meeting_room-24px.svg"}]
                  fragment)))
 
 (def app-styles
@@ -28,19 +39,32 @@
    [:body {:color "#333" :font-size "15px" :font-family "GothamPro" :height "100%"}]))
 
 (defn navbar []
-  (let [navigation* (rf/subscribe [::navigation])]
+  (let [navigation* (rf/subscribe [::navigation])
+        is-open? (r/atom false)
+        expand #(swap! is-open? not)]
     (fn []
       (let [menu @navigation*]
-        [:nav.navbar.navbar-expand-lg.navbar-light.bg-light.sticky-top
-         [:div.container.pl-3.pr-3
-          [:div.navbar-collapse
-           [:div.navbar-nav.grow-1
-            (for [i menu]
-              [:a.nav-item.nav-link
-               {:class (:class i)
-                :key (:href i)
-                :href (:href i)}
-               (:display i)])]]]]))))
+        [ui/MuiThemeProvider theme-defaults
+         [:div
+          [ui/AppBar {:title "CLARK"
+                      :iconElementRight (el [ui/FlatButton {:label "ВОЙТИ"}])
+
+                      :onLeftIconButtonTouchTap #(expand)}]
+          [ui/Drawer {:open @is-open?
+                      :docked false
+                      :onRequestChange #(expand)}
+           [ui/List
+            [ui/Subheader "Меню"]
+            [ui/Divider]
+              (for [i menu]
+                [ui/ListItem {:key (:href i)
+                              :hoverColor (color "cyan500")
+                              :rightIcon (el [ui/IconMenu {:iconButtonElement (el [:img {:src (:ico i)}])}])
+                              :isKeyboardFocused (:active i)
+                              :on-click (fn []
+                                          (rf/dispatch [:zframes.redirect/redirect {:uri (:href i)}])
+                                          (expand))}
+                 (:display i)])]]]]))))
 
 (defn layout []
   (fn [cnt]

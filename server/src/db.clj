@@ -6,12 +6,21 @@
             :host "localhost"
             :port 5432})
 
-(defn query [query]
-  (jdbc/query pg-db [query]))
+(defn query
+  ([query]
+   (jdbc/query pg-db query ))
+  ([query attrs]
+   (jdbc/query pg-db query attrs)))
 
 (defn insert [table data]
   (first
    (jdbc/insert! pg-db table data)))
+
+(defn update! [table data]
+  (let [is-updated (first
+                    (jdbc/update! pg-db table (dissoc data :id)
+                                  ["id = ?" (:id data)]))]
+    (when is-updated data)))
 
 (defn create-table [table schema]
   (jdbc/create-table-ddl table schema))

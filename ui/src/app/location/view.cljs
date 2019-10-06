@@ -1,49 +1,23 @@
 (ns app.location.view
   (:require [reagent-material-ui.core :as ui]
+            [app.location.crud.form   :as form]
+            [app.location.crud.view   :as form-view]
             [app.location.model       :as model]
-            [app.location.form        :as form]
             [app.placeholders         :as ph]
-            [app.form.inputs          :as i]
             [clojure.string           :as str]
             [re-frame.core            :as rf]
             [reagent.core             :as r]
             [app.helpers              :as h]
             [app.styles               :as s]
             [app.pages                :as pages]
-            [app.uikit                :as kit]))
+            [app.uikit                :as kit]
 
-(defn location-form []
-  [:div
-   [i/input form/schema-path [:building] {:hintText (:building ph/location)
-                                          :floatingLabelText (:building ph/location)}] [:br]
-   [i/input form/schema-path [:number] {:hintText (:number ph/location)
-                                        :type "number"
-                                        :floatingLabelText (:number ph/location)}] [:br]
-   [i/input form/schema-path [:slots] {:hintText (:slots ph/location)
-                                       :type "number"
-                                       :floatingLabelText (:slots ph/location)}] [:br]
-   [i/input form/schema-path [:responsible] {:hintText (:responsible ph/location)
-                                             :floatingLabelText (:responsible ph/location)}] [:br]
-   #_[ui/SelectField {:floatingLabelText (:sign ph/location)}
-    [ui/MenuItem {:value "1"
-                  :primaryText "Компьютеры"}]
-    [ui/MenuItem {:value "2"
-                  :primaryText "Проектор"}]]
-   #_[:div.d-flex
-    [ui/Chip {:onRequestDelete (fn []) :style s/chip}
-     "Компьютеры"]
-    [ui/Chip {:onRequestDelete (fn []) :style s/chip}
-     "Проектор"]]
-   [:div.form-buttons
-    [ui/RaisedButton {:label (:save ph/button)
-                      :on-click #(rf/dispatch [::model/create])
-                      :style s/form-button :primary true}]
-    [ui/RaisedButton {:label (:cancel ph/button)
-                      :on-click #(rf/dispatch [::h/expand :dialog])}]]])
+            [app.location.crud.view] ))
 
 (defn Item
-  [{:keys [building number slots responsible]} idx]
-  [ui/TableRow {:key idx}
+  [{:keys [id building number slots responsible]} idx]
+  [ui/TableRow {:key idx
+                :on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "locations" id "edit")}])}
    [ui/TableRowColumn building]
    [ui/TableRowColumn number]
    [ui/TableRowColumn slots]
@@ -68,10 +42,9 @@
    [ui/TableBody
     (map-indexed
      (fn [idx item] [Item item idx])
-     items)
-    ]])
+     items)]])
 
-(defn Tolbar []
+(defn Toolbar []
   (let [expands (h/expand? :dialog)
         expand #(rf/dispatch [::h/expand :dialog])]
     [ui/Toolbar
@@ -80,18 +53,20 @@
      [ui/ToolbarGroup
       [:div
        [ui/RaisedButton {:label (:create ph/button)
-                         :on-click #(expand)
+                         :on-click #(do
+                                      (rf/dispatch [::form/init])
+                                      (expand))
                          :primary true}]
        [ui/Dialog {:title (:create ph/location)
                    :autoScrollBodyContent true
                    :onRequestClose #(expand)
                    :open expands}
-        [location-form]]]]]))
+        [form-view/location-form]]]]]))
 
 (pages/reg-subs-page
  model/index-page
  (fn [{:keys [items]}]
    [:div.container
-    [Tolbar]
+    [Toolbar]
     [ui/TextField ph/search]
     [Table items]]))

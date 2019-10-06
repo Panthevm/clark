@@ -16,7 +16,6 @@
 (defn start [port]
   (ring/run-jetty app {:port port
                        :start? true}))
-
 (defn -main []
   (migration/migration)
   (let [port (Integer. (or (System/getenv "PORT") "8080"))]

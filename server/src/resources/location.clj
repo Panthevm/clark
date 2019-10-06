@@ -1,5 +1,6 @@
 (ns resources.location
-  (:require [db :as db]))
+  (:require [db :as db]
+            [clojure.string :as str]))
 
 (def table-ddl
   [[:id :serial "PRIMARY KEY"]
@@ -10,14 +11,22 @@
    [:created_at :timestamp
     "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]])
 
-;GET /locations
+                                        ;GET /locations
 (defn get! []
-  (db/query "SELECT * FROM locations"))
+  (db/query ["SELECT * FROM locations"]))
 
                                         ;POST /locations
 (defn insert! [{req :body}]
   (db/insert :locations
              (select-keys req [:building :number :slots :responsible])))
+                                        ;PUT /locations
+(defn update! [{req :body}]
+  (db/update! :locations req))
+
+;GET /locations/:id
+(defn select! [id]
+  (db/query ["SELECT * FROM locations WHERE id = ?" (read-string id)]
+            {:result-set-fn first}))
 
 (defn drop! []
   (db/do-commands

@@ -6,8 +6,10 @@
 
 (defn location-routes []
   (context "/locations" []
-           (GET  "/" []  (response (location/get!)))
-           (POST "/" req (response (location/insert! req)))))
+           (GET  "/"    []    (response (location/get!)))
+           (GET  "/:id" [id]  (response (location/select! id)))
+           (POST "/"    req   (response (location/insert! req)))
+           (PUT  "/:id" req   (response (location/update! req)))))
 
 (defroutes handler
   (location-routes)

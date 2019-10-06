@@ -1,4 +1,4 @@
-(ns app.location.form
+(ns app.location.crud.form
   (:require [re-frame.core     :as rf]
             [zenform.model     :as zf]
             [app.helpers       :as h]))
@@ -6,7 +6,8 @@
 (def schema-path [:form :location])
 (def schema
   {:type   :form
-   :fields {:building    {:type :string}
+   :fields {:id          {:type :string}
+            :building    {:type :string}
             :number      {:type :string}
             :slots       {:type :string}
             :responsible {:type :string}}})

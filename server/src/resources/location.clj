@@ -15,11 +15,9 @@
   (db/query "SELECT * FROM locations"))
 
                                         ;POST /locations
-(defn insert! [building number slots responsible]
-  (db/insert :locations {:building    building
-                         :number      number
-                         :slots       slots
-                         :responsible responsible}))
+(defn insert! [{req :body}]
+  (db/insert :locations
+             (select-keys req [:building :number :slots :responsible])))
 
 (defn drop! []
   (db/do-commands

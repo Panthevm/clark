@@ -1,6 +1,6 @@
 (ns app
   (:require [compojure.handler    :refer [api]]
-            [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
+            [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.middleware.cors :refer [wrap-cors]]
             [migration            :as migration]
             [ring.adapter.jetty   :as ring]
@@ -8,7 +8,7 @@
 
 (def app
   (-> (api handler/handler)
-      (wrap-json-params)
+      (wrap-json-body {:keywords? true})
       (wrap-json-response)
       (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :put :post :delete])))

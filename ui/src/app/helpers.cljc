@@ -4,6 +4,18 @@
             [re-frame.core :as rf]
             [route-map.core :as route-map]))
 
+(rf/reg-event-db
+ ::expand
+ (fn [db [_ element]]
+   (update db :expands
+           (fn [coll]
+             (if (some #{element} coll)
+               (into [] (remove #{element} coll))
+               (conj coll element))))))
+
+(defn expand? [key]
+  (let [coll @(rf/subscribe [:page/data :expands])]
+    (some? (some #{key} coll))))
 
 (defn to-query-params [params]
   (->> params

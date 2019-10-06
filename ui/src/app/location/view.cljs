@@ -6,10 +6,11 @@
             [reagent.core :as r]
             [app.styles :as s]
             [app.pages :as pages]
+            [app.helpers :as h]
             [clojure.string :as str]
             [app.location.model :as model]))
 
-(defn location-form [expand]
+(defn location-form []
   [:div
    [ui/TextField {:hintText (:building ph/location)
                   :floatingLabelText (:building ph/location)}] [:br]
@@ -35,7 +36,7 @@
     [ui/RaisedButton {:label (:save ph/button)
                       :style s/form-button :primary true}]
     [ui/RaisedButton {:label (:cancel ph/button)
-                      :on-click #(swap! expand not)}]]])
+                      :on-click #(rf/dispatch [::h/expand :dialog])}]]])
 
 (defn Item
   [{:keys [building number]}]
@@ -65,28 +66,27 @@
     (for [p items]
       [Item p])]])
 
-(defn Toolbar []
-  (let [expand-dialog (r/atom false)
-        expand #(swap! expand-dialog not)]
-  [ui/Toolbar
-   [ui/ToolbarGroup
-    [ui/ToolbarTitle {:text (:name ph/location)}]]
-   [ui/ToolbarGroup
-    [:div
-     [ui/RaisedButton {:label (:create ph/button)
-                       :on-click #(expand)
-                       :primary true}]
-     [ui/Dialog {:title (:create ph/location)
-                 :autoScrollBodyContent true
-                 :onRequestClose #(expand)
-                 :open @expand-dialog}
-      [location-form expand-dialog]]]]]))
+(defn Tolbar []
+  (let [expands (h/expand? :dialog)
+        expand #(rf/dispatch [::h/expand :dialog])]
+    [ui/Toolbar
+     [ui/ToolbarGroup
+      [ui/ToolbarTitle {:text (:name ph/location)}]]
+     [ui/ToolbarGroup
+      [:div
+       [ui/RaisedButton {:label (:create ph/button)
+                         :on-click #(expand)
+                         :primary true}]
+       [ui/Dialog {:title (:create ph/location)
+                   :autoScrollBodyContent true
+                   :onRequestClose #(expand)
+                   :open expands}
+        [location-form]]]]]))
 
 (pages/reg-subs-page
  model/index-page
- (fn [items]
+ (fn [{:keys [items]}]
    [:div.container
-    [Toolbar]
+    [Tolbar]
     [ui/TextField ph/search]
-    [Table items]
-    ]))
+    [Table items]]))

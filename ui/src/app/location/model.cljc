@@ -18,5 +18,5 @@
  index-page
  :<- [:xhr/response index-page]
  (fn [{data :data} _]
-   data))
+   {:items data}))
 

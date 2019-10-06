@@ -1,13 +1,13 @@
 (ns app.layout
   (:require [reagent-material-ui.core :as ui]
-            [app.uikit :as kit]
-            [re-frame.core :as rf]
-            [reagent.core :as r]
-            [app.styles :as styles]
-            [zframes.flash :as flashes]
-            [zframes.modal :as modal]
-            [app.helpers :as helpers]
-            [clojure.string :as str]))
+            [app.uikit                :as kit]
+            [re-frame.core            :as rf]
+            [reagent.core             :as r]
+            [app.styles               :as styles]
+            [zframes.flash            :as flashes]
+            [zframes.modal            :as modal]
+            [app.helpers              :as helpers]
+            [clojure.string           :as str]))
 
 (def el r/as-element)
 
@@ -36,16 +36,15 @@
 
 (defn navbar []
   (let [navigation* (rf/subscribe [::navigation])
-        is-open? (r/atom false)
-        expand #(swap! is-open? not)]
+        expand #(rf/dispatch [::helpers/expand :nav])]
     (fn []
-      (let [menu @navigation*]
+      (let [menu @navigation*
+            is-open? (helpers/expand? :nav)]
         [:div
          [ui/AppBar {:title "CLARK"
                      :iconElementRight (el [ui/FlatButton {:label "ВОЙТИ"}])
-
                      :onLeftIconButtonTouchTap #(expand)}]
-         [ui/Drawer {:open @is-open?
+         [ui/Drawer {:open is-open?
                      :docked false
                      :onRequestChange #(expand)}
           [ui/List

@@ -3,6 +3,11 @@
 
 (defonce pages (atom {}))
 
+(rf/reg-sub
+ :page/data
+ (fn [db [_ pid]]
+   (get db pid)))
+
 (defn subscribed-page [page-idx view]
   (fn [params]
     (let [m (rf/subscribe [page-idx])]

@@ -1,17 +1,19 @@
 (ns app.location.model
-  (:require [re-frame.core :as rf]
-            [app.helpers :as helpers]
-            [clojure.string :as str]))
+  (:require [app.location.form :as form]
+            [clojure.string    :as str]
+            [re-frame.core     :as rf]
+            [app.helpers       :as h]))
 
 (def index-page ::index)
 
 (rf/reg-event-fx
  index-page
- (fn [{db :db} [pid phase params]]
+ (fn [{db :db} [pid phase]]
    (let [params (get-in db [pid :params])]
      (case phase
        :init   {:xhr/fetch {:uri "/locations"
-                            :req-id pid}}
+                            :req-id pid}
+                :dispatch [::form/init]}
        :deinit {:db (dissoc db pid)}))))
 
 (rf/reg-sub
@@ -20,3 +22,18 @@
  (fn [{data :data} _]
    {:items data}))
 
+(rf/reg-event-fx
+ ::create
+ (fn [{db :db} _]
+   (form/evaling db
+                 (fn [value]
+                   {:xhr/fetch {:uri     "/locations"
+                                :method  "POST"
+                                :body    value
+                                :success {:event ::create-success}}}))))
+
+(rf/reg-event-fx
+ ::create-success
+ (fn [_ [_ {data :data}]]
+   {:dispatch-n [[:flash/success {:msg (str/join " " ["Аудитория «" (:building data) (:number data) "» создана"])}]
+                 [::h/expand :dialog]]}))

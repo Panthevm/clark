@@ -1,46 +1,49 @@
 (ns app.location.view
   (:require [reagent-material-ui.core :as ui]
-            [app.uikit :as kit]
-            [app.placeholders :as ph]
-            [re-frame.core :as rf]
-            [reagent.core :as r]
-            [app.styles :as s]
-            [app.pages :as pages]
-            [app.helpers :as h]
-            [clojure.string :as str]
-            [app.location.model :as model]))
+            [app.location.model       :as model]
+            [app.location.form        :as form]
+            [app.placeholders         :as ph]
+            [app.form.inputs          :as i]
+            [clojure.string           :as str]
+            [re-frame.core            :as rf]
+            [reagent.core             :as r]
+            [app.helpers              :as h]
+            [app.styles               :as s]
+            [app.pages                :as pages]
+            [app.uikit                :as kit]))
 
 (defn location-form []
   [:div
-   [ui/TextField {:hintText (:building ph/location)
-                  :floatingLabelText (:building ph/location)}] [:br]
-   [ui/TextField {:hintText (:number ph/location)
-                  :type "number"
-                  :floatingLabelText (:number ph/location)}] [:br]
-   [ui/TextField {:hintText (:slots ph/location)
-                  :type "number"
-                  :floatingLabelText (:slots ph/location)}] [:br]
-   [ui/TextField {:hintText (:responsible ph/location)
-                  :floatingLabelText (:responsible ph/location)}] [:br]
-   [ui/SelectField {:floatingLabelText (:sign ph/location)}
+   [i/input form/schema-path [:building] {:hintText (:building ph/location)
+                                          :floatingLabelText (:building ph/location)}] [:br]
+   [i/input form/schema-path [:number] {:hintText (:number ph/location)
+                                        :type "number"
+                                        :floatingLabelText (:number ph/location)}] [:br]
+   [i/input form/schema-path [:slots] {:hintText (:slots ph/location)
+                                       :type "number"
+                                       :floatingLabelText (:slots ph/location)}] [:br]
+   #_[i/input form/schema-path [:responsible] {:hintText (:slots ph/location)
+                                             :floatingLabelText (:slots ph/location)}] [:br]
+   #_[ui/SelectField {:floatingLabelText (:sign ph/location)}
     [ui/MenuItem {:value "1"
                   :primaryText "Компьютеры"}]
     [ui/MenuItem {:value "2"
                   :primaryText "Проектор"}]]
-   [:div.d-flex
+   #_[:div.d-flex
     [ui/Chip {:onRequestDelete (fn []) :style s/chip}
      "Компьютеры"]
     [ui/Chip {:onRequestDelete (fn []) :style s/chip}
      "Проектор"]]
    [:div.form-buttons
     [ui/RaisedButton {:label (:save ph/button)
+                      :on-click #(rf/dispatch [::model/create])
                       :style s/form-button :primary true}]
     [ui/RaisedButton {:label (:cancel ph/button)
                       :on-click #(rf/dispatch [::h/expand :dialog])}]]])
 
 (defn Item
-  [{:keys [building number]}]
-  [ui/TableRow
+  [{:keys [building number]} idx]
+  [ui/TableRow {:key idx}
    [ui/TableRowColumn building]
    [ui/TableRowColumn number]
    [ui/TableRowColumn number]
@@ -63,8 +66,10 @@
      [ui/TableHeaderColumn {:tooltip (:responsible-desc ph/location)}
       (:responsible ph/location)]]]
    [ui/TableBody
-    (for [p items]
-      [Item p])]])
+    (map-indexed
+     (fn [idx item] [Item item idx])
+     items)
+    ]])
 
 (defn Tolbar []
   (let [expands (h/expand? :dialog)

@@ -1,4 +1,5 @@
-(ns app.placeholders)
+(ns app.placeholders
+  (:require [clojure.string :as str]))
 
                                         ;Pages
 (def location

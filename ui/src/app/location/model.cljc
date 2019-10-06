@@ -31,9 +31,12 @@
                                 :method  "POST"
                                 :body    value
                                 :success {:event ::create-success}}}))))
-
 (rf/reg-event-fx
  ::create-success
- (fn [_ [_ {data :data}]]
-   {:dispatch-n [[:flash/success {:msg (str/join " " ["Аудитория «" (:building data) (:number data) "» создана"])}]
+ (fn [{db :db} [_ {data :data}]]
+   {:db (update-in db [:xhr :req index-page :data]
+                   (fn [items]
+                     (into [] (concat [data] items))))
+    :dispatch-n [[::h/flash {:msg (str/join " " ["Аудитория «" (:building data) (:number data) "» создана"])
+                             :ts (:created_at	data)}]
                  [::h/expand :dialog]]}))

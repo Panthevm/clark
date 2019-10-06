@@ -13,6 +13,12 @@
                (into [] (remove #{element} coll))
                (conj coll element))))))
 
+(rf/reg-event-db
+ ::flash
+ (fn [db [_ {:keys [msg ts]}]]
+   (assoc db :flash {:msg msg
+                     :ts ts})))
+
 (defn expand? [key]
   (let [coll @(rf/subscribe [:page/data :expands])]
     (some? (some #{key} coll))))

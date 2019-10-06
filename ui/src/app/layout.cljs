@@ -4,8 +4,6 @@
             [re-frame.core            :as rf]
             [reagent.core             :as r]
             [app.styles               :as styles]
-            [zframes.flash            :as flashes]
-            [zframes.modal            :as modal]
             [app.helpers              :as helpers]
             [clojure.string           :as str]))
 
@@ -61,6 +59,13 @@
                                        (expand))}
               (:display i)])]]]))))
 
+(defn Snack []
+  (let [flash (rf/subscribe [:page/data :flash])]
+    (fn []
+      [ui/Snackbar {:open (not (empty? @flash))
+                    :autoHideDuration 3000
+                    :message (:msg @flash)}])))
+
 (defn layout []
   (fn [cnt]
     [:div.app app-styles
@@ -68,8 +73,4 @@
       [:div
        [navbar]
        [:div.content cnt]
-
-       flashes/styles
-
-       [modal/modal]
-       [flashes/flashes]]]]))
+       [Snack]]]]))

@@ -22,8 +22,8 @@
    [i/input form/schema-path [:slots] {:hintText (:slots ph/location)
                                        :type "number"
                                        :floatingLabelText (:slots ph/location)}] [:br]
-   #_[i/input form/schema-path [:responsible] {:hintText (:slots ph/location)
-                                             :floatingLabelText (:slots ph/location)}] [:br]
+   [i/input form/schema-path [:responsible] {:hintText (:responsible ph/location)
+                                             :floatingLabelText (:responsible ph/location)}] [:br]
    #_[ui/SelectField {:floatingLabelText (:sign ph/location)}
     [ui/MenuItem {:value "1"
                   :primaryText "Компьютеры"}]
@@ -42,13 +42,13 @@
                       :on-click #(rf/dispatch [::h/expand :dialog])}]]])
 
 (defn Item
-  [{:keys [building number]} idx]
+  [{:keys [building number slots responsible]} idx]
   [ui/TableRow {:key idx}
    [ui/TableRowColumn building]
    [ui/TableRowColumn number]
+   [ui/TableRowColumn slots]
    [ui/TableRowColumn number]
-   [ui/TableRowColumn number]
-   [ui/TableRowColumn number]])
+   [ui/TableRowColumn responsible]])
 
 (defn Table [items]
   [ui/Table

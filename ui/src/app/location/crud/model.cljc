@@ -37,6 +37,20 @@
                                 :success {:event ::success-update}}}))))
 
 (rf/reg-event-fx
+ ::delete
+ (fn [{db :db} [_ id]]
+   {:xhr/fetch {:uri     (str "/locations/" id)
+                :method  "DELETE"
+                :success {:event ::success-delete}}}))
+
+(rf/reg-event-fx
+ ::success-delete
+ (fn [{db :db} [_ {data :data}]]
+   {:dispatch-n [[:zframes.redirect/redirect {:uri "/locations"}]
+                 [::h/flash {:msg "Аудитория удалена"
+                             :ts (:created_at	data)}]]}))
+
+(rf/reg-event-fx
  ::success-update
  (fn [_ [_ {data :data}]]
    {:dispatch-n [[:zframes.redirect/redirect {:uri "/locations"}]

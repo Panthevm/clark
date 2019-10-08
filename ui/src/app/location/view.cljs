@@ -4,20 +4,19 @@
             [app.location.crud.view   :as form-view]
             [app.location.model       :as model]
             [app.placeholders         :as ph]
-            [clojure.string           :as str]
             [re-frame.core            :as rf]
             [reagent.core             :as r]
             [app.helpers              :as h]
             [app.styles               :as s]
             [app.pages                :as pages]
             [app.uikit                :as kit]
-
-            [app.location.crud.view] ))
+            
+            [app.location.crud.view]))
 
 (defn Item
-  [{:keys [id building number slots responsible]} idx]
-  [ui/TableRow {:key idx
-                :on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "locations" id "edit")}])}
+  [{:keys [id building number slots responsible]}]
+  [ui/TableRow {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "locations" id)}])
+                :hoverable true}
    [ui/TableRowColumn building]
    [ui/TableRowColumn number]
    [ui/TableRowColumn slots]
@@ -25,7 +24,7 @@
    [ui/TableRowColumn responsible]])
 
 (defn Table [items]
-  [ui/Table
+  [ui/Table {:width "100px"}
    [ui/TableHeader {:displaySelectAll  false
                     :adjustForCheckbox false}
     [ui/TableRow
@@ -39,10 +38,9 @@
       (:sign ph/location)]
      [ui/TableHeaderColumn {:tooltip (:responsible-desc ph/location)}
       (:responsible ph/location)]]]
-   [ui/TableBody
-    (map-indexed
-     (fn [idx item] [Item item idx])
-     items)]])
+   [ui/TableBody {:preScanRows false}
+    (for [item items] ^{:key (:id item)}
+      [Item item])]])
 
 (defn Toolbar []
   (let [expands (h/expand? :dialog)
@@ -66,7 +64,8 @@
 (pages/reg-subs-page
  model/index-page
  (fn [{:keys [items]}]
-   [:div.container
+   [:div
     [Toolbar]
+
     [ui/TextField ph/search]
     [Table items]]))

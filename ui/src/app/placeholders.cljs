@@ -9,21 +9,21 @@
    :building-desc    "Назваие корпуса где находиться аудитория"
    :number           "Номер"
    :number-desc      "Номер аудитории"
-   :slots            "Количество мест"
+   :slots            "Мест"
    :slots-desc       "Количество вмещаемых мест"
    :responsible      "Ответсвенный"
    :responsible-desc "за пожарную безопасность"
-   :sign             "Добавить признак"
+   :sign             "Признаки"
    :sign-desc        "Признаки, которыми обладает аудитория"})
 
                                         ;Inputs
 (def search {:hintText          "Поиск..."
-             :floatingLabelText "Поиск"})
-
+             :fullWidth true})
                                         ;Buttons
 (def button
   {:create "Создать"
    :save   "Сохранить"
+   :delete "Удалить"
    :cancel "Отмена"})
 
 

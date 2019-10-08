@@ -22,6 +22,13 @@
                                   ["id = ?" (:id data)]))]
     (when is-updated data)))
 
+(defn delete! [table id]
+  (let [is-deleted (first
+                    (jdbc/delete! pg-db
+                                  table
+                                  ["id = ?" id]))]
+    (when is-deleted {:id id})))
+
 (defn create-table [table schema]
   (jdbc/create-table-ddl table schema))
 

@@ -13,7 +13,7 @@
 
                                         ;GET /locations
 (defn get! []
-  (db/query ["SELECT * FROM locations"]))
+  (db/query ["SELECT * FROM locations LIMIT 30"]))
 
                                         ;POST /locations
 (defn insert! [{req :body}]
@@ -23,10 +23,13 @@
 (defn update! [{req :body}]
   (db/update! :locations req))
 
-;GET /locations/:id
+                                        ;GET /locations/:id
 (defn select! [id]
   (db/query ["SELECT * FROM locations WHERE id = ?" (read-string id)]
             {:result-set-fn first}))
+                                        ;DELETE /locations/:id
+(defn delete! [id]
+  (db/delete! :locations (read-string id)))
 
 (defn drop! []
   (db/do-commands

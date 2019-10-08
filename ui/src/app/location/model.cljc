@@ -1,5 +1,5 @@
 (ns app.location.model
-  (:require [re-frame.core     :as rf]))
+  (:require [re-frame.core :as rf]))
 
 (def index-page ::index)
 

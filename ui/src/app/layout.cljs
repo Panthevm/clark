@@ -27,20 +27,15 @@
 
 (def app-styles
   (styles/style
-   [:body {:color "#333" :font-size "15px" :font-family "GothamPro" :height "100%"}
-    [:.content {:padding-top "40px"}]
-    [:.form-buttons {:padding-top "20px"
-                     :padding-bottom "20px"}]]))
+   [:body {:margin "0px" :color "#333" :font-size "15px" :font-family "GothamPro" :height "100%"}]))
 
 (defn navbar []
-  (let [navigation* (rf/subscribe [::navigation])
+  (let [menu (rf/subscribe [::navigation])
         expand #(rf/dispatch [::helpers/expand :nav])]
     (fn []
-      (let [menu @navigation*
-            is-open? (helpers/expand? :nav)]
+      (let [is-open? (helpers/expand? :nav)]
         [:div
-         [ui/AppBar {:title "CLARK"
-                     :iconElementRight (el [ui/FlatButton {:label "ВОЙТИ"}])
+         [ui/AppBar {:iconElementRight (el [ui/FlatButton {:label "ВОЙТИ"}])
                      :onLeftIconButtonTouchTap #(expand)}]
          [ui/Drawer {:open is-open?
                      :docked false
@@ -48,9 +43,8 @@
           [ui/List
            [ui/Subheader "Меню"]
            [ui/Divider]
-           (for [i menu]
+           (for [i @menu]
              [ui/ListItem {:key (:href i)
-                           :hoverColor (kit/color "cyan500")
                            :rightIcon (el [ui/Avatar {:src (:ico i)
                                                       :backgroundColor "none"}])
                            :isKeyboardFocused (:active i)
@@ -62,9 +56,10 @@
 (defn Snack []
   (let [flash (rf/subscribe [:page/data :flash])]
     (fn []
-      [ui/Snackbar {:open (not (empty? @flash))
-                    :autoHideDuration 3000
-                    :message (:msg @flash)}])))
+      (when (not (empty? @flash))
+        [ui/Snackbar {:open true
+                      :autoHideDuration 3000
+                      :message (:msg @flash)}]))))
 
 (defn layout []
   (fn [cnt]
@@ -72,5 +67,5 @@
      [ui/MuiThemeProvider kit/theme-defaults
       [:div
        [navbar]
-       [:div.content cnt]
+       [:div cnt]
        [Snack]]]]))

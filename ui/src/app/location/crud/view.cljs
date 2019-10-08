@@ -34,9 +34,14 @@
    [:div.form-buttons
     [ui/RaisedButton {:label (:save ph/button)
                       :on-click #(rf/dispatch (if id [::model/update id] [::model/create]))
-                      :style s/form-button :primary true}]
+                      :style s/form-button
+                      :primary true}]
     [ui/RaisedButton {:label (:cancel ph/button)
-                      :on-click #(rf/dispatch [::h/expand :dialog])}]]])
+                      :style s/form-button
+                      :on-click #(rf/dispatch [::h/expand :dialog])}]
+    [ui/FlatButton {:label (:delete ph/button)
+                    :secondary true
+                    :on-click #(rf/dispatch [::model/delete id])}]]])
 
 (pages/reg-subs-page
  model/index-page

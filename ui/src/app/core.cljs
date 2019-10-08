@@ -8,6 +8,7 @@
             [zframes.window-location]
 
             [app.location.view]
+            [app.groups.view]
             [app.index.view]
 
             [app.helpers]

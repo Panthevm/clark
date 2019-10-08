@@ -10,7 +10,7 @@
             [app.styles               :as s]
             [app.pages                :as pages]
             [app.uikit                :as kit]
-            
+
             [app.location.crud.view]))
 
 (defn Item
@@ -24,7 +24,7 @@
    [ui/TableRowColumn responsible]])
 
 (defn Table [items]
-  [ui/Table {:width "100px"}
+  [ui/Table 
    [ui/TableHeader {:displaySelectAll  false
                     :adjustForCheckbox false}
     [ui/TableRow

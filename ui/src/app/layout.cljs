@@ -21,8 +21,9 @@
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment _]
-   (current-page [{:id "main" :href (helpers/href "/") :display "Главная страница" :ico  "/img/home-24px.svg"}
-                  {:id "post" :href (helpers/href "locations") :display "Аудитории" :ico "/img/meeting_room-24px.svg"}]
+   (current-page [{:id "main"     :href (helpers/href "/")         :display "Главная страница" :ico  "/img/home-24px.svg"}
+                  {:id "groups" :href (helpers/href "groups")  :display "Группы"       :ico "/img/meeting_room-24px.svg"}
+                  {:id "post"     :href (helpers/href "locations") :display "Аудитории"        :ico "/img/meeting_room-24px.svg"}]
                  fragment)))
 
 (def app-styles

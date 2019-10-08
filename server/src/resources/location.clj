@@ -2,7 +2,7 @@
   (:require [db :as db]
             [clojure.string :as str]))
 
-(def table-ddl
+(def table
   [[:id :serial "PRIMARY KEY"]
    [:building "varchar(32)"]
    [:number  "varchar(16)"]
@@ -13,7 +13,7 @@
 
                                         ;GET /locations
 (defn get! []
-  (db/query ["SELECT * FROM locations LIMIT 30"]))
+  (db/query ["SELECT * FROM locations LIMIT 15"]))
 
                                         ;POST /locations
 (defn insert! [{req :body}]

@@ -39,9 +39,10 @@
     [ui/RaisedButton {:label (:cancel ph/button)
                       :style s/form-button
                       :on-click #(rf/dispatch [::h/expand :dialog])}]
-    [ui/FlatButton {:label (:delete ph/button)
-                    :secondary true
-                    :on-click #(rf/dispatch [::model/delete id])}]]])
+    (when id
+      [ui/FlatButton {:label (:delete ph/button)
+                      :secondary true
+                      :on-click #(rf/dispatch [::model/delete id])}])]])
 
 (pages/reg-subs-page
  model/index-page

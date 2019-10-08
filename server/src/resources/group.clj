@@ -4,9 +4,10 @@
 
 (def table
   [[:id :serial "PRIMARY KEY"]
-   [:department  "varchar(64)"]
-   [:course  :int2]
-   [:studentsNumber :int2]
+   ;[:faculty :serial "REFERENCES faculty"]
+   [:department "varchar(64)"]
+   [:course "varchar(1)"]
+   [:students_number "varchar(2)"]
    [:created_at :timestamp
     "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]])
 
@@ -16,20 +17,20 @@
 
                                         ;POST /group
 (defn insert! [{req :body}]
-  (db/insert :locations
-             (select-keys req [:faculty :department :course :studentsNumber])))
+  (db/insert :groups
+             (select-keys req [:department :course :students_number])))
                                         ;PUT /group
 (defn update! [{req :body}]
-  (db/update! :group req))
+  (db/update! :groups req))
 
                                         ;GET /group/:id
 (defn select! [id]
-  (db/query ["SELECT * FROM group WHERE id = ?" (read-string id)]
+  (db/query ["SELECT * FROM groups WHERE id = ?" (read-string id)]
             {:result-set-fn first}))
                                         ;DELETE /group/:id
 (defn delete! [id]
-  (db/delete! :group (read-string id)))
+  (db/delete! :groups (read-string id)))
 
 (defn drop! []
   (db/do-commands
-   (db/drop-table :group)))
+   (db/drop-table :groups)))

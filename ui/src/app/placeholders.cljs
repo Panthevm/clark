@@ -4,7 +4,7 @@
                                         ;Pages
 (def location
   {:name             "Аудитории"
-   :create           "Создание аудитории"
+   :create           "Добавление аудитории"
    :building         "Корпус"
    :building-desc    "Назваие корпуса где находиться аудитория"
    :number           "Номер"
@@ -15,6 +15,16 @@
    :responsible-desc "за пожарную безопасность"
    :sign             "Признаки"
    :sign-desc        "Признаки, которыми обладает аудитория"})
+
+(def groups
+  {:name             "Группы"
+   :create           "Добавление группы"
+   :department       "Кафедра"
+   :department-desc  "Название кафедры"
+   :course           "Курс"
+   :course-desc      "Курс обучения"
+   :students         "Студентов"
+   :students-desc    "Количество студентов в группе"})
 
                                         ;Inputs
 (def search {:hintText          "Поиск..."

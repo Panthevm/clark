@@ -14,6 +14,5 @@
 
   (repl/start  figwheel-options)
 
-
   (repl/stop "app")
   (repl/cljs-repl))

@@ -8,7 +8,7 @@
 
 (defn query
   ([query]
-   (jdbc/query pg-db query ))
+   (jdbc/query pg-db query))
   ([query attrs]
    (jdbc/query pg-db query attrs)))
 

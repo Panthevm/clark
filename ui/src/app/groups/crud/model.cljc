@@ -54,8 +54,8 @@
  ::success-update
  (fn [_ [_ {data :data}]]
    {:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
-                [::h/flash {:msg (str/join " " ["Аудитория «" (:building data) (:number data) "» обновлена"])
-                            :ts (:created_at	data)}]]}))
+                 [::h/flash {:msg (str/join " " ["Группа «" (:department data) "» обновлена"])
+                             :ts  (:created_at	data)}]]}))
 
 (rf/reg-event-fx
  ::create
@@ -72,7 +72,7 @@
    {:db (update-in db [:xhr :req :groups :data]
                    (fn [items]
                      (into [] (concat [data] items))))
-    :dispatch-n [[::h/flash {:msg (str/join " " ["Аудитория «" (:building data) (:number data) "» создана"])
+    :dispatch-n [[::h/flash {:msg (str/join " " ["Группа «" (:department data) "» создана"])
                              :ts (:created_at	data)}]
                  [::h/expand :dialog]]}))
 

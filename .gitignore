@@ -1,0 +1,10 @@
+/target
+/classes
+/checkouts
+/pgdata
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+.hgignore
+.hg/

@@ -1,22 +1,21 @@
 (ns app
-  (:require [compojure.handler    :refer [api]]
-            [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
-            [ring.middleware.cors :refer [wrap-cors]]
-            [migration            :as migration]
-            [ring.adapter.jetty   :as ring]
-            [handler              :as handler]))
+  (:require [org.httpkit.server   :refer [run-server]]
+            [handler              :refer [handler]]
+            [migration            :refer [migration]]
+            (ring.middleware
+             [cors :refer [wrap-cors]]
+             [json :refer [wrap-json-body wrap-json-response]])))
 
 (def app
-  (-> (api handler/handler)
+  (-> handler/handler
       (wrap-json-body {:keywords? true})
       (wrap-json-response)
       (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :put :post :delete])))
 
-(defn start [port]
-  (ring/run-jetty app {:port port
-                       :start? true}))
-(defn -main []
-  (migration/migration)
-  (let [port (Integer. (or (System/getenv "PORT") "8080"))]
-    (start port)))
+(defn -main
+  [& args]
+  (let [port (Integer/parseInt (or (System/getenv "PORT") "8080"))]
+    (migration)
+    (run-server app {:port port})
+    (println (str "Running http:/127.0.0.1:" port))))

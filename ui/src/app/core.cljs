@@ -17,7 +17,7 @@
             [app.pages]))
 
 (def default-config
-  {:base-url     "http://localhost:3000"
+  {:base-url     "http://localhost:8080"
    :redirect_uri "http://localhost:8081"})
 
 (defn ui-config [location]

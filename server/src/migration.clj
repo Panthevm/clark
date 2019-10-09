@@ -1,7 +1,9 @@
 (ns migration
-  (:require (resources
+  (:require [db :as db]
+            (resources
              [location :as location]
-             [group    :as group])))
+             [group    :as group]
+             [faculty  :as faculty])))
 
 (defn migrated? [table]
   (-> (db/query (str "select count(*) from information_schema.tables "
@@ -18,5 +20,6 @@
 
 (defn migration []
   (do
-    (migrate :groups     group/table)
+    (migrate :faculties faculty/table)
+    (migrate :groups    group/table)
     (migrate :locations location/table)))

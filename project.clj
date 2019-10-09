@@ -6,6 +6,5 @@
                  [http-kit                  "2.3.0"]
                  [ring/ring-json            "0.5.0"]
                  [ring-cors                 "0.1.13"]
-                 [metosin/reitit-ring "0.3.10"]
-                 #_[compojure                 "1.6.1"]]
+                 [metosin/reitit-ring "0.3.10"]]
   :main app.dev)

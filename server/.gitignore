@@ -1,7 +1,0 @@
-/target
-/pgdata
-/.lein-*
-/.nrepl-port
-.hgignore
-.hg/
-*.#*

@@ -5,6 +5,7 @@
             [zframes.routing]
             [zframes.redirect]
             [zframes.xhr]
+            [zframes.method]
             [zframes.window-location]
 
             [app.location.view]

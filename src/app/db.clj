@@ -3,6 +3,8 @@
 
 (def pg-db {:dbtype "postgresql"
             :dbname "clark"
+            :user "admin"
+            :password "admin"
             :host "localhost"
             :port 5432})
 

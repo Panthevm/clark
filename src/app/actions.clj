@@ -13,7 +13,7 @@
 
 (defn update! [table {req :body}]
   {:status 200
-   :body (db/update! table (dissoc req :id :created_at))})
+   :body (db/update! table (dissoc req :created_at))})
 
 (defn select! [table req]
   {:status 200

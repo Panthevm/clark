@@ -11,13 +11,12 @@
  (fn [{db :db} [pid phase params]]
    (case phase
      :init   {:xhr/fetch {:uri (str "/locations/" (:id params))
-                          :req-id pid
                           :success {:event ::success-get}}}
      :deinit {:db (dissoc db pid)})))
 
 (rf/reg-sub
  index-page
- :<- [:xhr/response :locations]
+ :<- [:pages/data :locations]
  (fn [{data :data} _]
    {:items data}))
 

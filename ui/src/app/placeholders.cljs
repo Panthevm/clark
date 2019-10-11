@@ -6,25 +6,22 @@
   {:name             "Аудитории"
    :create           "Добавление аудитории"
    :building         "Корпус"
-   :building-desc    "Назваие корпуса где находиться аудитория"
    :number           "Номер"
-   :number-desc      "Номер аудитории"
    :slots            "Мест"
-   :slots-desc       "Количество вмещаемых мест"
    :responsible      "Ответсвенный"
-   :responsible-desc "за пожарную безопасность"
-   :sign             "Признаки"
-   :sign-desc        "Признаки, которыми обладает аудитория"})
+   :sign             "Признаки"})
 
 (def groups
   {:name             "Группы"
    :create           "Добавление группы"
    :department       "Кафедра"
-   :department-desc  "Название кафедры"
    :course           "Курс"
-   :course-desc      "Курс обучения"
-   :students         "Студентов"
-   :students-desc    "Количество студентов в группе"})
+   :students         "Студентов"})
+
+(def faculty
+  {:name             "Факультеты"
+   :create           "Добавление факультета"
+   :faculty-name     "Название"})
 
                                         ;Inputs
 (def search {:hintText          "Поиск..."

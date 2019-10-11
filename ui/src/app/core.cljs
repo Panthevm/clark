@@ -10,6 +10,7 @@
 
             [app.location.view]
             [app.groups.view]
+            [app.faculty.view]
             [app.index.view]
 
             [app.helpers]

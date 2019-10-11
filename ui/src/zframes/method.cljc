@@ -10,9 +10,9 @@
 
 (rf/reg-event-fx
  :method/create
- (fn [_ [_ {{:keys [type id] :as resource} :resource success :success :as req}]]
+ (fn [_ [_ {{:keys [resource_type id] :as resource} :resource success :success :as req}]]
    {:xhr/fetch (-> req
-                   (assoc :uri (str "/" (name type) (when id  (str "/" id)))
+                   (assoc :uri (str "/" (name resource_type) (when id  (str "/" id)))
                           :method "POST"
                           :body resource)
                    (dissoc :resource))}))
@@ -34,9 +34,9 @@
 
 (rf/reg-event-fx
  :method/update
- (fn [_ [_ {{:keys [type id] :as resource} :resource success :success :as req}]]
+ (fn [_ [_ {{:keys [resource_type id] :as resource} :resource success :success :as req}]]
    {:xhr/fetch (-> req
-                   (assoc :uri (str "/" (name type) (when id  (str "/" id)))
+                   (assoc :uri (str "/" (name resource_type) (when id  (str "/" id)))
                           :method "PUT"
                           :body resource)
                    (dissoc :resource))}))

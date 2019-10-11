@@ -15,5 +15,5 @@
    (ring/router
     [(default :groups)
      (default :locations)
-     #_(default :faculty)])
+     (default :faculties)])
    (constantly {:status 404, :body "not found"})))

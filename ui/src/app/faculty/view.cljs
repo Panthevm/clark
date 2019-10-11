@@ -1,33 +1,29 @@
-(ns app.groups.view
+(ns app.faculty.view
   (:require [re-frame.core            :as rf]
             [reagent-material-ui.core :as ui]
-            [app.groups.crud.form     :as form]
-            [app.groups.crud.view     :as form-view]
-            [app.groups.model         :as model]
+            [app.faculty.crud.form     :as form]
+            [app.faculty.crud.view     :as form-view]
+            [app.faculty.model         :as model]
             [app.placeholders         :as ph]
             [reagent.core             :as r]
             [app.helpers              :as h]
             [app.styles               :as s]
             [app.pages                :as pages]
             [app.uikit                :as kit]
-            [app.groups.crud.view]))
+            [app.faculty.crud.view]))
 
 (defn Item
-  [{:keys [id department course students_number]}]
-  [ui/TableRow {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "groups" id)}])
+  [{:keys [id name]}]
+  [ui/TableRow {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "faculties" id)}])
                 :hoverable true}
-   [ui/TableRowColumn department]
-   [ui/TableRowColumn course]
-   [ui/TableRowColumn students_number]])
+   [ui/TableRowColumn name]])
 
 (defn Table [items]
   [ui/Table
    [ui/TableHeader {:displaySelectAll  false
                     :adjustForCheckbox false}
     [ui/TableRow
-     [ui/TableHeaderColumn (:department ph/groups)]
-     [ui/TableHeaderColumn (:course ph/groups)]
-     [ui/TableHeaderColumn (:students ph/groups)]]]
+     [ui/TableHeaderColumn (:faculty-name ph/faculty)]]]
    [ui/TableBody {:preScanRows false}
     (for [item items] ^{:key (:id item)}
       [Item item])]])
@@ -37,7 +33,7 @@
         expand #(rf/dispatch [::h/expand :dialog])]
     [ui/Toolbar
      [ui/ToolbarGroup
-      [ui/ToolbarTitle {:text (:name ph/groups)}]]
+      [ui/ToolbarTitle {:text (:name ph/faculty)}]]
      [ui/ToolbarGroup
       [:div
        [ui/RaisedButton {:label (:create ph/button)
@@ -45,7 +41,7 @@
                                       (rf/dispatch [::form/init])
                                       (expand))
                          :primary true}]
-       [ui/Dialog {:title (:create ph/groups)
+       [ui/Dialog {:title (:create ph/faculty)
                    :autoScrollBodyContent true
                    :onRequestClose #(expand)
                    :open expands}

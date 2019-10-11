@@ -28,16 +28,11 @@
    [ui/TableHeader {:displaySelectAll  false
                     :adjustForCheckbox false}
     [ui/TableRow
-     [ui/TableHeaderColumn {:tooltip (:building-desc ph/location)}
-      (:building ph/location)]
-     [ui/TableHeaderColumn {:tooltip (:number-desc ph/location)}
-      (:number ph/location)]
-     [ui/TableHeaderColumn {:tooltip (:slots-desc ph/location)}
-      (:slots ph/location)]
-     [ui/TableHeaderColumn {:tooltip (:sign-desc ph/location)}
-      (:sign ph/location)]
-     [ui/TableHeaderColumn {:tooltip (:responsible-desc ph/location)}
-      (:responsible ph/location)]]]
+     [ui/TableHeaderColumn (:building ph/location)]
+     [ui/TableHeaderColumn (:number ph/location)]
+     [ui/TableHeaderColumn (:slots ph/location)]
+     [ui/TableHeaderColumn (:sign ph/location)]
+     [ui/TableHeaderColumn (:responsible ph/location)]]]
    [ui/TableBody {:preScanRows false}
     (for [item items] ^{:key (:id item)}
       [Item item])]])

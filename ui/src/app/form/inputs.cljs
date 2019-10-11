@@ -5,14 +5,16 @@
             [zenform.model  :as zf]))
 
 (defn input
-  [form-path path & [attrs]]
-  (let [node (rf/subscribe [:zf/node form-path path])
+  [form-path path & [{:keys [placeholder] :as attrs}]]
+  (let [node      (rf/subscribe [:zf/node form-path path])
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
       (let [{:keys [validators value errors]} @node]
         [ui/TextField (merge
-                       {:id (name (first path))
-                        :on-change on-change
-                        :errorText (str/join ", " (vals errors))
-                        :value (or value "")}
-                       attrs)]))))
+                       {:id                (name (first path))
+                        :hintText          placeholder
+                        :floatingLabelText placeholder
+                        :on-change         on-change
+                        :errorText         (str/join ", " (vals errors))
+                        :value             (or value "")}
+                       (dissoc attrs :placeholder))]))))

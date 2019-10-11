@@ -28,3 +28,8 @@
 (defn drop! [table]
   (db/do-commands
    (db/drop-table table)))
+
+(comment
+  (drop! :locations)
+  (drop! :groups)
+  (drop! :faculties))

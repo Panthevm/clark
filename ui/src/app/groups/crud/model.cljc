@@ -17,24 +17,22 @@
 
 (rf/reg-sub
  index-page
- :<- [:xhr/response :locations]
- (fn [{data :data} _]
-   {:items data}))
+ :<- [:page/data index-page]
+ (fn [_ _]
+   ))
 
 (rf/reg-event-fx
  ::success-get
  (fn [_ [_ {data :data}]]
-   {:dispatch [::form/init data]}))
+   {:dispatch [::form/init (:resource data)]}))
 
 (rf/reg-event-fx
  ::update
  (fn [{db :db} [_ id]]
    (form/evaling db
                  (fn [value]
-                   {:xhr/fetch {:uri     (str "/groups/" id)
-                                :method  "PUT"
-                                :body    value
-                                :success {:event ::success-update}}}))))
+                   {:method/update {:resource value
+                                    :success {:event ::success-update}}}))))
 
 (rf/reg-event-fx
  ::delete
@@ -45,9 +43,8 @@
 
 (rf/reg-event-fx
  ::success-delete
- [:zframes.redirect/redirect {:uri "/groups"}]
  (fn [{db :db} [_ {data :data}]]
-   #_{:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
+   {:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
                    [::h/flash {:msg "Аудитория удалена"
                              :ts (:created_at	data)}]]}))
 
@@ -70,6 +67,7 @@
 (rf/reg-event-fx
  ::create-success
  (fn [{db :db} [_ {data :data}]]
+   (prn data)
    {:db (update-in db [:xhr :req :groups :data]
                    (fn [items]
                      (into [] (concat [data] items))))

@@ -9,7 +9,8 @@
    :fields {:id              {:type :string}
             :department      {:type :string}
             :course          {:type :integer}
-            :students_number {:type :integer}}})
+            :students_number {:type :integer}
+            :resource_type   {:type :string}}})
 
 (defn evaling [db cb]
   (let [{:keys [errors value]} (->> schema-path (get-in db) zf/eval-form)]

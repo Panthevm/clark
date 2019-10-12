@@ -2,6 +2,7 @@
 
 (def table
   [[:resource :jsonb]]
+
   #_[[:faculty :integer]
      [:department "varchar(64)"]
      [:course "varchar(1)"]

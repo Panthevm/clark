@@ -14,7 +14,7 @@
   [:div
    [i/input form/schema-path [:name] {:placeholder (:faculty-name ph/faculty)}]
    [:div.form-buttons
-    [kit/ButtonSave #(rf/dispatch (if id [::model/update id] [::model/create]))]
+    [kit/ButtonSave #(rf/dispatch [::model/update id])]
     [kit/ButtonCancel #(rf/dispatch [::h/expand :dialog])]
     (when id
       [kit/ButtonDelete #(rf/dispatch [::model/delete id])])]])

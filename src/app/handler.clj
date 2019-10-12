@@ -14,6 +14,6 @@
   (ring/ring-handler
    (ring/router
     [(default :groups)
-     (default :locations)
-     (default :faculties)])
+     #_(default :locations)
+     #_(default :faculties)])
    (constantly {:status 404, :body "not found"})))

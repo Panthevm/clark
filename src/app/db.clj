@@ -1,7 +1,11 @@
 (ns app.db
+  (:use app.honey-extension)
   (:require [clojure.java.jdbc :as jdbc]
-            [clojure.data.json :as json])
+            [clojure.data.json :as json]
+            [honeysql.helpers :as h]
+            [honeysql.core     :as sql])
   (:import org.postgresql.util.PGobject))
+
 
 (def pg-db {:dbtype "postgresql"
             :dbname "clark"
@@ -26,29 +30,23 @@
         "jsonb" (json/read-str value :key-fn keyword)
         :else value))))
 
-(defn value-to-json-pgobject [value]
+(defn jsonb-object [value]
   (doto (PGobject.)
     (.setType "jsonb")
     (.setValue (json/write-str value))))
 
 (extend-protocol jdbc/ISQLValue
   clojure.lang.IPersistentMap
-  (sql-value [value] (value-to-json-pgobject value))
+  (sql-value [value] (jsonb-object value))
 
   clojure.lang.IPersistentVector
-  (sql-value [value] (value-to-json-pgobject value)))
+  (sql-value [value] (jsonb-object value)))
 
 (defn query
   ([query]
-   (jdbc/query pg-db query))
+   (jdbc/query pg-db (sql/format query)))
   ([query attrs]
-   (jdbc/query pg-db query attrs)))
-
-(defn insert [table data]
-  (let [resp (first
-              (jdbc/insert! pg-db table {:resource data}))]
-    (when resp
-      (query [(str "UPDATE " (name table) " SET resource = resource || '{\"id\":" (:id resp) "}' WHERE id = "(:id resp)" returning resource")]))))
+   (jdbc/query pg-db (sql/format query) attrs)))
 
 (defn update! [table data]
   (let [is-updated (first

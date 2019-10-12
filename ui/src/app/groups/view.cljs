@@ -13,7 +13,7 @@
             [app.groups.crud.view]))
 
 (defn Item
-  [{:keys [id department course students_number]}]
+  [{{:keys [id department course students_number]} :resource}]
   [ui/TableRow {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "groups" id)}])
                 :hoverable true}
    [ui/TableRowColumn department]

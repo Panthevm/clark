@@ -16,7 +16,7 @@
    [i/input form/schema-path [:course]          {:placeholder ph/groups}] [:br]
    [i/input form/schema-path [:students_number] {:placeholder ph/groups}] [:br]
    [:div.form-buttons
-    [kit/ButtonSave #(rf/dispatch [::model/create])]
+    [kit/ButtonSave #(rf/dispatch (if id [::model/update id] [::model/create]))]
     [kit/ButtonCancel #(rf/dispatch [:zframes.redirect/redirect {:uri "#/groups"}])]
     (when id
       [kit/ButtonDelete #(rf/dispatch [::model/delete id])])]])

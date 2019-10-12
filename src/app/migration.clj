@@ -16,8 +16,9 @@
                             "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]])))
 
 (defn migrated? [table]
-  (-> (db/query (str "select count(*) from information_schema.tables "
-                     "where table_name='"(name table)"'"))
+  (-> (db/query {:select [:%count.*]
+                 :from   [:information_schema.tables]
+                 :where  [:= :table_name (str (name table))]})
       first :count pos?))
 
 (defn migrate [table table-ddl]

@@ -14,7 +14,7 @@
 (rf/reg-sub
  index-page
  :<- [:xhr/response :groups]
- (fn [{data :data} _]
-   {:items (map :resource data)}))
+ (fn [{groups :data} _]
+   {:items groups}))
 
 

@@ -4,12 +4,11 @@
 
 (defn get! [table req]
   {:status 200
-   :body (db/query [(str "SELECT * FROM " (name table) " LIMIT 15")])})
+   :body (db/query [(str "SELECT resource FROM " (name table) " LIMIT 15")])})
 
 (defn insert! [table {req :body}]
   {:status 201
-   :body (db/insert table
-                    (dissoc req :created_at))})
+   :body (db/insert table req)})
 
 (defn update! [table {req :body}]
   {:status 200
@@ -17,9 +16,8 @@
 
 (defn select! [table req]
   {:status 200
-   :body (db/query [(str "SELECT * FROM " (name table) " WHERE id = ?")
-                    (read-string (get-in req [:path-params :id]))]
-                   {:result-set-fn first})})
+   :body (:resource (first (db/query [(str "SELECT resource FROM " (name table) " WHERE id = ?")
+                                      (read-string (get-in req [:path-params :id]))])))})
 
 (defn delete! [table req]
   {:status 200

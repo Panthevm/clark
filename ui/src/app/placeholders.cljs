@@ -16,7 +16,7 @@
    :create           "Добавление группы"
    :department       "Кафедра"
    :course           "Курс"
-   :students         "Студентов"})
+   :students_number  "Студентов"})
 
 (def faculty
   {:name             "Факультеты"

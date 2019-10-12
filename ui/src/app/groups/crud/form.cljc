@@ -6,10 +6,10 @@
 (def schema-path [:form :location])
 (def schema
   {:type   :form
-   :fields {:id             {:type :string}
-            :department     {:type :string}
-            :course         {:type :string}
-            :students_number {:type :string}}})
+   :fields {:id              {:type :string}
+            :department      {:type :string}
+            :course          {:type :integer}
+            :students_number {:type :integer}}})
 
 (defn evaling [db cb]
   (let [{:keys [errors value]} (->> schema-path (get-in db) zf/eval-form)]

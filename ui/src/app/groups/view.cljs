@@ -33,23 +33,14 @@
       [Item item])]])
 
 (defn Toolbar []
-  (let [expands (h/expand? :dialog)
-        expand #(rf/dispatch [::h/expand :dialog])]
-    [ui/Toolbar
-     [ui/ToolbarGroup
-      [ui/ToolbarTitle {:text (:name ph/groups)}]]
-     [ui/ToolbarGroup
-      [:div
-       [ui/RaisedButton {:label (:create ph/button)
-                         :on-click #(do
-                                      (rf/dispatch [::form/init])
-                                      (expand))
-                         :primary true}]
-       [ui/Dialog {:title (:create ph/groups)
-                   :autoScrollBodyContent true
-                   :onRequestClose #(expand)
-                   :open expands}
-        [form-view/form]]]]]))
+  [ui/Toolbar
+   [ui/ToolbarGroup
+    [ui/ToolbarTitle {:text (:name ph/groups)}]]
+   [ui/ToolbarGroup
+    [:div
+     [kit/ButtonCreate #(do (rf/dispatch [::form/init])
+                            (rf/dispatch [::h/expand :dialog]))]
+     [kit/Dialog [form-view/form]]]]])
 
 (pages/reg-subs-page
  model/index-page

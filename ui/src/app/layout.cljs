@@ -21,15 +21,12 @@
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment _]
-   (current-page [{:id "main"     :href (helpers/href "/")         :display "Главная страница" :ico  "/img/home-24px.svg"}
-                  {:id "faculties" :href (helpers/href "faculties")  :display "Факультеты"       :ico "/img/meeting_room-24px.svg"}
-                  {:id "groups" :href (helpers/href "groups")  :display "Группы"       :ico "/img/meeting_room-24px.svg"}
-                  {:id "post"     :href (helpers/href "locations") :display "Аудитории"        :ico "/img/meeting_room-24px.svg"}]
+   (current-page [{:id "main"      :href (helpers/href "/")         :display "Главная страница" :ico  "/img/home-24px.svg"}
+                  {:id "faculties" :href (helpers/href "faculties") :display "Факультеты"       :ico "/img/meeting_room-24px.svg"}
+                  {:id "groups"    :href (helpers/href "groups")    :display "Группы"           :ico "/img/meeting_room-24px.svg"}
+                  {:id "post"      :href (helpers/href "locations") :display "Аудитории"        :ico "/img/meeting_room-24px.svg"}]
                  fragment)))
 
-(def app-styles
-  (styles/style
-   [:body {:margin "0px" :color "#333" :font-size "15px" :font-family "GothamPro" :height "100%"}]))
 
 (defn navbar []
   (let [menu (rf/subscribe [::navigation])
@@ -65,7 +62,7 @@
 
 (defn layout []
   (fn [cnt]
-    [:div.app app-styles
+    [:div.app styles/app-styles
      [ui/MuiThemeProvider kit/theme-defaults
       [:div
        [navbar]

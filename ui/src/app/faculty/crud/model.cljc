@@ -1,7 +1,6 @@
 (ns app.faculty.crud.model
   (:require [re-frame.core          :as rf]
             [app.faculty.crud.form  :as form]
-            [clojure.string         :as str]
             [app.helpers            :as h]))
 
 (def index-page ::index)
@@ -22,9 +21,12 @@
    {}))
 
 (rf/reg-event-fx
- ::success-get
- (fn [_ [_ {data :data}]]
-   {:dispatch [::form/init data]}))
+ ::create
+ (fn [{db :db} _]
+   (form/evaling db
+    (fn [value]
+      {:method/create {:resource value
+                       :success {:event ::success-create}}}))))
 
 (rf/reg-event-fx
  ::update
@@ -41,6 +43,19 @@
                     :success {:event ::success-delete}}}))
 
 (rf/reg-event-fx
+ ::success-get
+ (fn [_ [_ {data :data}]]
+   {:dispatch [::form/init data]}))
+
+(rf/reg-event-fx
+ ::success-create
+ (fn [{db :db} [_ {data :data}]]
+   {:db (update-in db [:xhr :req :faculties :data]
+                   (fn [items]
+                     (into [] (concat [data] items))))
+    :dispatch [::h/expand :dialog]}))
+
+(rf/reg-event-fx
  ::success-delete
  (fn [{db :db} [_ {data :data}]]
    {:dispatch-n [[:zframes.redirect/redirect {:uri "/faculties"}]
@@ -51,19 +66,4 @@
  ::success-update
  (fn [_ [_ {data :data}]]
    {:dispatch [:zframes.redirect/redirect {:uri "/faculties"}]}))
-
-(rf/reg-event-fx
- ::create
- (fn [{db :db} _]
-   (form/evaling db
-                 (fn [value]
-                   {:method/create {:resource value
-                                    :success {:event ::create-success}}}))))
-(rf/reg-event-fx
- ::create-success
- (fn [{db :db} [_ {data :data}]]
-   {:db (update-in db [:xhr :req :groups :data]
-                   (fn [items]
-                     (into [] (concat [data] items))))
-    :dispatch [::h/expand :dialog]}))
 

@@ -8,12 +8,12 @@
  (fn [{db :db} [pid phase]]
    (case phase
      :init   {:method/get {:resource {:type :faculties}
-                           :req-id :groups}}
+                           :req-id :faculties}}
      :deinit {:db (dissoc db pid)})))
 
 (rf/reg-sub
  index-page
- :<- [:xhr/response :groups]
+ :<- [:xhr/response :faculties]
  (fn [{data :data} _]
    {:items data}))
 

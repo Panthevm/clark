@@ -15,6 +15,6 @@
  index-page
  :<- [:xhr/response :groups]
  (fn [{data :data} _]
-   {:items data}))
+   {:items (map :resource data)}))
 
 

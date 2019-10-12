@@ -45,9 +45,10 @@
 
 (rf/reg-event-fx
  ::success-delete
+ [:zframes.redirect/redirect {:uri "/groups"}]
  (fn [{db :db} [_ {data :data}]]
-   {:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
-                 [::h/flash {:msg "Аудитория удалена"
+   #_{:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
+                   [::h/flash {:msg "Аудитория удалена"
                              :ts (:created_at	data)}]]}))
 
 (rf/reg-event-fx

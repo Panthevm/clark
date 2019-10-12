@@ -14,8 +14,8 @@
  ::redirect
  (fn [opts]
    (redirect (str (:uri opts)
-                       (when-let [params (:params opts)]
-                         (window-location/gen-query-string params))))))
+                  (when-let [params (:params opts)]
+                    (window-location/gen-query-string params))))))
 (rf/reg-event-fx
  ::redirect
  (fn [fx [_ opts]]

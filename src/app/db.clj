@@ -1,5 +1,7 @@
 (ns app.db
-  (:require [clojure.java.jdbc :as jdbc]))
+  (:require [clojure.java.jdbc :as jdbc]
+            [clojure.data.json :as json])
+  (:import org.postgresql.util.PGobject))
 
 (def pg-db {:dbtype "postgresql"
             :dbname "clark"
@@ -8,6 +10,34 @@
             :host "localhost"
             :port 5432})
 
+(extend-protocol jdbc/ISQLValue
+  clojure.lang.IPersistentMap
+  (sql-value [value]
+    (doto (PGobject.)
+      (.setType "jsonb")
+      (.setValue (json/write-str value)))))
+
+(extend-protocol jdbc/IResultSetReadColumn
+  PGobject
+  (result-set-read-column [pgobj metadata idx]
+    (let [type  (.getType pgobj)
+          value (.getValue pgobj)]
+      (case type
+        "jsonb" (json/read-str value :key-fn keyword)
+        :else value))))
+
+(defn value-to-json-pgobject [value]
+  (doto (PGobject.)
+    (.setType "jsonb")
+    (.setValue (json/write-str value))))
+
+(extend-protocol jdbc/ISQLValue
+  clojure.lang.IPersistentMap
+  (sql-value [value] (value-to-json-pgobject value))
+
+  clojure.lang.IPersistentVector
+  (sql-value [value] (value-to-json-pgobject value)))
+
 (defn query
   ([query]
    (jdbc/query pg-db query))
@@ -15,8 +45,10 @@
    (jdbc/query pg-db query attrs)))
 
 (defn insert [table data]
-  (first
-   (jdbc/insert! pg-db table data)))
+  (let [resp (first
+              (jdbc/insert! pg-db table {:resource data}))]
+    (when resp
+      (query [(str "UPDATE " (name table) " SET resource = resource || '{\"id\":" (:id resp) "}' WHERE id = "(:id resp)" returning resource")]))))
 
 (defn update! [table data]
   (let [is-updated (first

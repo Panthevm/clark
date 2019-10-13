@@ -6,12 +6,12 @@ Keeping track of student performance
 
 Backend: 
 ```clj
-[org.clojure/java.jdbc     "0.7.10"]
-[org.postgresql/postgresql "42.2.2"]
-[http-kit                  "2.3.0"]
-[ring/ring-json            "0.5.0"]
+[org.clojure/clojure       "1.10.1"]
+[org.immutant/web          "2.1.10"]
+[clj-pg                    "0.0.3"] 
+[ring/ring-json            "0.5.0"] 
+[metosin/reitit-ring       "0.3.10"]
 [ring-cors                 "0.1.13"]
-[metosin/reitit-ring "0.3.10"]
 ```
 Frontend:
 

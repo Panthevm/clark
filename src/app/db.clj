@@ -1,70 +1,24 @@
 (ns app.db
-  (:use app.honey-extension)
-  (:require [clojure.java.jdbc :as jdbc]
-            [clojure.data.json :as json]
-            [honeysql.helpers :as h]
-            [honeysql.core     :as sql])
-  (:import org.postgresql.util.PGobject))
+  (:require [app.pool :as poll]
+            [environ.core :refer [env]]))
 
 
-(def pg-db {:dbtype "postgresql"
-            :dbname "clark"
-            :user "admin"
-            :password "admin"
-            :host "localhost"
-            :port 5432})
+(defonce pool (atom nil))
 
-(extend-protocol jdbc/ISQLValue
-  clojure.lang.IPersistentMap
-  (sql-value [value]
-    (doto (PGobject.)
-      (.setType "jsonb")
-      (.setValue (json/write-str value)))))
+(def database-url "jdbc:postgresql://localhost:5432/clark?user=admin&password=admin&stringtype=unspecified")
+(def database-template-url "jdbc:postgresql://localhost:5432/DATABASE?user=root&password=root&stringtype=unspecified")
 
-(extend-protocol jdbc/IResultSetReadColumn
-  PGobject
-  (result-set-read-column [pgobj metadata idx]
-    (let [type  (.getType pgobj)
-          value (.getValue pgobj)]
-      (case type
-        "jsonb" (json/read-str value :key-fn keyword)
-        :else value))))
+(defn db []
+  (if-let [p @pool]
+    p
+    (reset! pool
+            {:datasource (poll/create-pool {:idle-timeout       10000
+                                            :minimum-idle       1
+                                            :maximum-pool-size  3
+                                            :connection-init-sql "select 1"
+                                            :data-source.url  (or (env :database-url) database-url)})})))
 
-(defn jsonb-object [value]
-  (doto (PGobject.)
-    (.setType "jsonb")
-    (.setValue (json/write-str value))))
-
-(extend-protocol jdbc/ISQLValue
-  clojure.lang.IPersistentMap
-  (sql-value [value] (jsonb-object value))
-
-  clojure.lang.IPersistentVector
-  (sql-value [value] (jsonb-object value)))
-
-(defn query
-  ([query]
-   (jdbc/query pg-db (sql/format query)))
-  ([query attrs]
-   (jdbc/query pg-db (sql/format query) attrs)))
-
-(defn update! [table data]
-  (let [is-updated (first
-                    (jdbc/update! pg-db table data
-                                  ["id = ?" (:id data)]))]
-    (when is-updated data)))
-
-(defn delete! [table id]
-  (let [is-deleted (first
-                    (jdbc/delete! pg-db table
-                                  ["id = ?" id]))]
-    (when is-deleted {:id id})))
-
-(defn create-table [table schema]
-  (jdbc/create-table-ddl table schema))
-
-(defn drop-table [table]
-  (jdbc/drop-table-ddl table))
-
-(defn do-commands [fn]
-  (jdbc/db-do-commands pg-db fn))
+(defn reset []
+  (when-let [p @pool]
+    (poll/close-pool (:datasource p))
+    (reset! pool nil)))

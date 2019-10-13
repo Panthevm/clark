@@ -1,21 +1,23 @@
 (ns app.dev
-  (:require [org.httpkit.server   :refer [run-server]]
-            [app.handler              :as handler]
+  (:require [immutant.web             :as web]
+            [app.migration            :as migration]
+            [app.handler              :refer [handler]]
+            [environ.core             :refer (env)]
             [app.migration            :refer [migration]]
             (ring.middleware
              [cors :refer [wrap-cors]]
-             [json :refer [wrap-json-body wrap-json-response]])))
+             [json :refer [wrap-json-body wrap-json-response]]))
+  (:gen-class))
 
 (def app
-  (-> handler/handler
+  (-> #'handler
       (wrap-json-body {:keywords? true})
       (wrap-json-response)
       (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :put :post :delete])))
 
-(defn -main
-  [& args]
-  (let [port (Integer/parseInt (or (System/getenv "PORT") "8080"))]
-    (migration)
-    (run-server app {:port port})
-    (println (str "Running http:/127.0.0.1:" port))))
+(defn -main [& {:as args}]
+  (migration)
+  (web/run app
+    (merge {"host" (env :demo-web-host), "port" (env :demo-web-port)}
+           args)))

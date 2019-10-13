@@ -7,13 +7,13 @@
  index-page
  (fn [{db :db} [pid phase]]
    (case phase
-     :init   {:method/get {:resource {:type :groups}
-                           :req-id :groups}}
+     :init   {:method/get {:resource {:type :group}
+                           :req-id :group}}
      :deinit {:db (dissoc db pid)})))
 
 (rf/reg-sub
  index-page
- :<- [:xhr/response :groups]
+ :<- [:xhr/response :group]
  (fn [{groups :data} _]
    {:items groups}))
 

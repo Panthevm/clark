@@ -3,7 +3,7 @@
             [zenform.model     :as zf]
             [app.helpers       :as h]))
 
-(def schema-path [:form :location])
+(def schema-path [:form :group])
 (def schema
   {:type   :form
    :fields {:id              {:type :string}

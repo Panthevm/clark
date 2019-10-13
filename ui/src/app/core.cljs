@@ -8,10 +8,7 @@
             [zframes.method]
             [zframes.window-location]
 
-            [app.location.view]
             [app.groups.view]
-            [app.faculty.view]
-            [app.index.view]
 
             [app.helpers]
             [app.routes]

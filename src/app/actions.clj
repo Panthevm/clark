@@ -1,55 +1,41 @@
 (ns app.actions
-  (:require [app.db         :as db]
-            [clojure.data.json :as json]
-            [honeysql.helpers :as h]
-            [clojure.string :as str]))
+  (:require [app.db :refer [db]]
+            [clj-pg.honey :as pg]))
 
-(defn get! [table req]
-  {:status 200
-   :body   (db/query {:select [:resource]
-                      :from   [table]
-                      :limit  15})})
+(defn -exists? [table] (pg/table-exists? (db) table))
+(defn -create  [table] (pg/create-table  (db) table))
+(defn -drop    [table] (pg/drop-table    (db) table))
 
-(defn insert! [table {req :body}]
-  (let [{:keys [id resource]} (db/query {:insert-into [[table [:resource]]
-                                          {:values [[(db/jsonb-object req)]]}]
-                            :returning [:*]}
-                           {:result-set-fn first})
-        resp (db/query {:update table
-                        :set {:resource
-                              (db/jsonb-object
-                               (assoc resource
-                                      :id id
-                                      :resource_type (name table)))}
-                        :where [:= :id id]
-                        :returning [:resource]}
-                       {:result-set-fn first})]
+(defn -get [table req]
+  {:status  200
+   :body    (pg/query (db) {:select [:resource] :from [(:table table)]})})
+
+(defn -post [table {body :body}]
+  (let [insert   (pg/create (db) table {:resource body})
+        response (pg/update (db) table
+                            (update insert :resource
+                                    #(assoc %
+                                            :resource_type (-> table :table name)
+                                            :id (:id insert))))]
     {:status 201
-     :body resp}))
+     :body   (select-keys response [:resource])}))
 
-(defn update! [table {req :body}]
-  {:status 200
-   :body (db/query {:update table
-                    :set {:resource (db/jsonb-object req)}
-                    :where [:= :id (:id req)]
-                    :returning [:resource]})})
+(defn -select [table {{id :id} :path-params :as ss}]
+  (let [response (pg/query-first (db) {:select [:resource]
+                                       :from [(:table table)]
+                                       :where [:= :id id]})]
+    {:status 200
+     :body response}))
 
-(defn select! [table {{id :id} :path-params}]
-  {:status 200
-   :body   (db/query {:select [:resource]
-                      :from   [table]
-                      :where  [:= :id (read-string id)]}
-                     {:result-set-fn first})})
+(defn -put
+  [table {:keys [body path-params]}]
+  (let [response (pg/update (db) table {:id (:id path-params)
+                                        :resource body})]
+    {:status 200
+     :body (:resource response)}))
 
-(defn delete! [table {{id :id} :path-params}]
-  {:status 200
-   :body (db/delete! table (read-string id))})
-
-(defn drop! [table]
-  (db/do-commands
-   (db/drop-table table)))
-
-(comment
-  (drop! :locations)
-  (drop! :groups)
-  (drop! :faculties))
+(defn -delete
+  [table {{id :id} :path-params}]
+  (let [response (pg/delete (db) table id)]
+    {:status 200
+     :body (select-keys response [:id])}))

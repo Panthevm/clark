@@ -8,18 +8,17 @@
 
 (rf/reg-event-fx
  index-page
- (fn [{db :db} [pid phase params]]
+ (fn [{db :db} [pid phase {id :id}]]
    (case phase
-     :init   {:xhr/fetch {:uri (str "/groups/" (:id params))
-                          :req-id pid
-                          :success {:event ::success-get}}}
-     :deinit {:db (dissoc db pid)})))
+     :init   {:method/get {:resource {:type :group :id id}
+                           :success {:event ::success-get}}}
+     :deinit {:db (dissoc db :form)})))
 
 (rf/reg-sub
  index-page
  :<- [:page/data index-page]
  (fn [_ _]
-   ))
+   {}))
 
 (rf/reg-event-fx
  ::success-get
@@ -37,41 +36,31 @@
 (rf/reg-event-fx
  ::delete
  (fn [{db :db} [_ id]]
-   {:xhr/fetch {:uri     (str "/groups/" id)
-                :method  "DELETE"
-                :success {:event ::success-delete}}}))
+   {:method/delete {:resource {:type :group :id id}
+                    :success  {:event ::success-delete}}}))
 
 (rf/reg-event-fx
  ::success-delete
  (fn [{db :db} [_ {data :data}]]
-   {:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
-                   [::h/flash {:msg "Аудитория удалена"
-                             :ts (:created_at	data)}]]}))
+   {:dispatch [:zframes.redirect/redirect {:uri "/groups"}]}))
 
 (rf/reg-event-fx
  ::success-update
  (fn [_ [_ {data :data}]]
-   {:dispatch-n [[:zframes.redirect/redirect {:uri "/groups"}]
-                 [::h/flash {:msg (str/join " " ["Группа «" (:department data) "» обновлена"])
-                             :ts  (:created_at	data)}]]}))
+   {:dispatch [:zframes.redirect/redirect {:uri "/groups"}]}))
 
 (rf/reg-event-fx
  ::create
  (fn [{db :db} _]
    (form/evaling db
                  (fn [value]
-                   {:xhr/fetch {:uri     "/groups"
-                                :method  "POST"
-                                :body    value
-                                :success {:event ::create-success}}}))))
+                   {:method/create {:resource (assoc value :resource_type :group)
+                                    :success {:event ::create-success}}}))))
 (rf/reg-event-fx
  ::create-success
  (fn [{db :db} [_ {data :data}]]
-   (prn data)
-   {:db (update-in db [:xhr :req :groups :data]
+   {:db (update-in db [:xhr :req :group :data]
                    (fn [items]
                      (into [] (concat [data] items))))
-    :dispatch-n [[::h/flash {:msg (str/join " " ["Группа «" (:department data) "» создана"])
-                             :ts (:created_at	data)}]
-                 [::h/expand :dialog]]}))
+    :dispatch [::h/expand :dialog]}))
 

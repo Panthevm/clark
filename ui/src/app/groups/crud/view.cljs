@@ -2,16 +2,14 @@
   (:require [re-frame.core            :as rf]
             [app.groups.crud.form     :as form]
             [app.groups.crud.model    :as model]
-            [reagent-material-ui.core :as ui]
             [app.helpers              :as h]
             [app.styles               :as s]
             [app.form.inputs          :as i]
-            [app.uikit                :as kit]
             [app.pages                :as pages]
             [app.placeholders         :as ph]))
 
 (defn form [id]
-  [:div.form
+  #_[:div.form
    [i/input form/schema-path [:department]      {:placeholder ph/groups}] [:br]
    [i/input form/schema-path [:course]          {:placeholder ph/groups}] [:br]
    [i/input form/schema-path [:students_number] {:placeholder ph/groups}] [:br]

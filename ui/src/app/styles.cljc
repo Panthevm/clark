@@ -13,4 +13,5 @@
 (def app-styles
   (style
    [:body {:margin "0px" :color "#333" :font-size "15px" :font-family "GothamPro" :height "100%"}
-    [:.form {:margin "40px"}]]))
+    [:.content-body {:margin-top "60px"}]
+    ]))

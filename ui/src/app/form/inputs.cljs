@@ -1,6 +1,5 @@
 (ns app.form.inputs
   (:require [re-frame.core  :as rf]
-            [reagent-material-ui.core :as ui]
             [clojure.string :as str]
             [zenform.model  :as zf]))
 
@@ -16,7 +15,7 @@
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
       (let [{:keys [validators value errors type ] :as ss} @node]
-        [ui/TextField (merge
+        #_[ui/TextField (merge
                        {:id                (name (first path))
                         :hintText          (get placeholder (first path))
                         :floatingLabelText (get placeholder (first path))

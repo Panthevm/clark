@@ -9,6 +9,7 @@
             [zframes.window-location]
 
             [app.groups.view]
+            [app.schedule.view]
 
             [app.helpers]
             [app.routes]

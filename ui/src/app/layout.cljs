@@ -13,15 +13,17 @@
 (defn navbar []
   (let [menu (rf/subscribe [::navigation])]
     (fn []
-      [:div.ui.top.fixed.menu
-       [:a.item {:on-click #(rf/dispatch [::helpers/expand :sidebar])} "Меню"]
-       (for [{:keys [id href display]} @menu]
-         [:a.item {:key id :href href}
-          display])])))
+      [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
+       [:button.navbar-toggler
+        [:i.fas.fa-bars]]
+       [:div.navbar-collapse
+        [:div.navbar-nav
+         (for [{:keys [id href display]} @menu]
+           [:a.nav-item.nav-link {:key id :href href}
+            display])]]])))
 
 (defn layout []
   (fn [cnt]
     [:div.app styles/app-styles
-     [:div
-      [navbar]
-      [:div.content-body cnt]]]))
+     [navbar]
+     [:div.content-body cnt]]))

@@ -3,4 +3,5 @@
 (def routes {:.         :app.groups.model/index
              "schedule" {:. :app.schedule.model/index}
              "groups"   {:.    :app.groups.model/index
-                         [:id] {:. :app.groups.crud.model/index}}})
+                         "create" {:. :app.groups.crud.model/create}
+                         [:id] {:. :app.groups.crud.model/show}}})

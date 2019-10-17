@@ -9,7 +9,7 @@
 (defn Form [{:keys [id]}]
   [:div
    [:div.form
-    [i/input form/path [:group] {:label "Группа"}]]
+    [i/single-combobox form/path [:group] {:label "Группа"}]]
 
    [:div.row
     [:button.btn

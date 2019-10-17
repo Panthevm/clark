@@ -1,13 +1,15 @@
 (ns app.schedule.crud.form
   (:require [re-frame.core     :as rf]
             [zenform.model     :as zf]
+            [app.form.events   :as event]
             [app.helpers       :as h]))
 
 (def path [:form :schedule])
 (def schema
   {:type   :form
    :fields {:id            {:type :string}
-            :group         {:type :string}
+            :group         {:type :string
+                            :on-search ::event/group}
             :resource_type {:type :string}}})
 
 (defn evaling [db cb]

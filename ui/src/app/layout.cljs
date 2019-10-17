@@ -7,7 +7,7 @@
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment _]
-   [{:id "schedule" :href (helpers/href "schedule")  :display "Расписания"}
+   [{:id "schedule" :href (helpers/href "schedule")  :display "Журналы"}
     {:id "groups"   :href (helpers/href "groups")    :display "Группы"}]))
 
 (defn navbar []

@@ -1,16 +1,13 @@
-(ns app.groups.crud.form
+(ns app.schedule.crud.form
   (:require [re-frame.core     :as rf]
             [zenform.model     :as zf]
             [app.helpers       :as h]))
 
-(def path [:form :group])
+(def path [:form :schedule])
 (def schema
   {:type   :form
    :fields {:id            {:type :string}
-            :department    {:type :string}
-            :course        {:type :integer}
-            :students      {:type :collection
-                            :item {:type :string}}
+            :group         {:type :string}
             :resource_type {:type :string}}})
 
 (defn evaling [db cb]
@@ -22,4 +19,5 @@
  ::init
  (fn [{db :db} [_ & [data]]]
    {:dispatch [:zf/init path schema data]}))
+
 

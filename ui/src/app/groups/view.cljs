@@ -1,11 +1,9 @@
 (ns app.groups.view
   (:require [re-frame.core            :as rf]
-            [app.groups.crud.form     :as form]
-            [app.groups.crud.view     :as form-view]
             [app.groups.model         :as model]
             [app.helpers              :refer [href]]
-            [app.styles               :as s]
-            [app.pages                :as pages]))
+            [app.pages                :as pages]
+            [app.groups.crud.view]))
 
 (defn Item [{{:keys [id department]} :resource}]
   [:a.list-group-item.list-group-item-action {:href (href "groups" id)}

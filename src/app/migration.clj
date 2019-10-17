@@ -1,6 +1,7 @@
 (ns app.migration
   (:require [app.actions :as a]
             (app.resources
+             [schedule :as schedule]
              [group    :as group])))
 
 (defn migrate [table]
@@ -8,4 +9,6 @@
     (a/-create table)))
 
 (defn migration []
-  (migrate group/table))
+  (do
+    (migrate schedule/table)
+    (migrate group/table)))

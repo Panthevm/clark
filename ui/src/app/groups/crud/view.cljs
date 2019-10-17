@@ -3,24 +3,33 @@
             [app.groups.crud.form     :as form]
             [app.groups.crud.model    :as model]
             [app.helpers              :as h]
-            [app.styles               :as s]
             [app.form.inputs          :as i]
             [app.pages                :as pages]))
+(defn Student
+  [idx]
+  [:div.form-row
+   [:div.flex-grow-1
+    (prn idx)
+    [i/input form/path [:students idx] {:placeholder "Фамилия Имя Отчество"}]]
+   [:div.mt-2.ml-2
+    [:span.text-danger
+     {:on-click #(rf/dispatch [:zf/remove-collection-item form/path [:students] idx])}
+     "Удалить"]]])
 
-(defn Form [& [id]]
+(defn Form [{:keys [id idx-students]}]
   [:div
-   [:div..form
-    [i/input form/schema-path [:department] {:label "Кафедра"}]
+   [:div.form
+    [i/input form/path [:department] {:label "Кафедра"}]
     [:div.row>div.col-2
-     [i/input form/schema-path [:course]     {:label "Курс"}]]
-    [:table.table.table-sm
-     [:thead
-      [:th.numeric "№"]
-      [:th "ФИО"]]
-     [:tbody
-      [:tr
-       [:th "1"]
-       [:th "Багров Иван Владимирович"]]]]]
+     [i/input form/path [:course]     {:label "Курс"}]]
+    [:div
+     [:text.pr-2 "Студенты"]
+     (for [idx idx-students] ^{:key idx}
+       [Student idx])
+     [:span.text-primary.pointer
+      {:on-click #(rf/dispatch [:zf/add-collection-item form/path [:students] ""])}
+      "Добавить"]]]
+
    [:div.row
     [:button.btn
      {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}
@@ -28,20 +37,22 @@
     [:button.btn
      {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri "#/groups"}])}
      "Отменить"]
-    [:button.btn
-     {:on-click #(rf/dispatch [::model/delete id])}
-     "Удалить"]]])
+    (when id 
+      [:button.btn
+       {:on-click #(rf/dispatch [::model/delete id])}
+       "Удалить"])]])
 
 (pages/reg-subs-page
  model/index-page
- (fn [{:keys [item]} params]
+ (fn [{:keys [idx-students]} {id :id}]
    [:div.container.segment.shadow.white
     [:h2 "Редактирование группы"]
-    [Form (:id params)]]))
+    [Form {:idx-students idx-students
+           :id id}]]))
 
 (pages/reg-subs-page
  model/create-page
- (fn [{:keys [item]} params]
+ (fn [{:keys [idx-students]}]
    [:div.container.segment.shadow.white
     [:h2 "Создание группы"]
-    [Form]]))
+    [Form {:idx-students idx-students}]]))

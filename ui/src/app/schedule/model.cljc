@@ -7,13 +7,15 @@
  index-page
  (fn [{db :db} [pid phase]]
    (case phase
-     :init {:db db}
+     :init   {:method/get {:resource {:type :schedule}
+                           :req-id :schedule}}
      :deinit {:db (dissoc db pid)})))
 
 (rf/reg-sub
  index-page
- (fn [db _]
-   {}))
+ :<- [:xhr/response :schedule]
+ (fn [{groups :data} _]
+   {:items groups}))
 
 
 

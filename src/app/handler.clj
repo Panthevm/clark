@@ -2,7 +2,8 @@
   (:require [reitit.ring :as ring]
             [app.actions :as a]
             (app.resources
-             [group :as group])))
+             [group    :as group]
+             [schedule :as schedule])))
 
 (defn default [table]
   [(str "/" (name (:table table)))
@@ -15,5 +16,6 @@
 (def handler
   (ring/ring-handler
    (ring/router
-    [(default group/table)])
+    [(default group/table)
+     (default schedule/table)])
    (constantly {:status 404, :body "not found"})))

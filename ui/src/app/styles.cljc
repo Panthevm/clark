@@ -4,12 +4,6 @@
 (defn style [css]
   [:style (garden/css css)])
 
-(def form-button
-  {:margin-right 12})
-
-(def chip
-  {:margin-right 4})
-
 (def app-styles
   (style
    [:body {:background-color "#e4e4e4"
@@ -25,6 +19,7 @@
     [:.btn {:background-color "#d5d5d5"}]
     [:.white {:background-color "#ffffff"}]
     [:.content-body {:margin-top "40px"}]
+    [:.form-row {:padding "5px"}]
     [:.form {:padding "25px 0 25px 0"}
      [:.form-control
       [:&:focus {:background-color  "#e4e4e4"

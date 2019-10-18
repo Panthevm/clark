@@ -15,7 +15,7 @@
     (fn []
       [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
        [:button.navbar-toggler
-        [:i.fas.fa-bars]]
+        [:i.far.fa-bars]]
        [:div.navbar-collapse
         [:div.navbar-nav
          (for [{:keys [id href display]} @menu]

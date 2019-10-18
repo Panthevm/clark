@@ -20,12 +20,27 @@
     [:.white {:background-color "#ffffff"}]
     [:.content-body {:margin-top "40px"}]
     [:.form-row {:padding "5px"}]
+    [:.combobox {:position "relative"}
+     [:.menu {:border "none"
+              :z-index "99"
+              :width "100%"
+              :position "absolute"}]
+     [:.icon {:padding ".375rem .75rem"
+              :align-items "center"
+              :margin-left "1px"
+              :border-radius ".25em 0 0 .25em"
+
+              :display "flex"}]
+     [:.search {:border-radius ".25em .25em 0 0"}]
+     [:.list-group-item:first-child
+      {:border-radius "0"}]]
     [:.form {:padding "25px 0 25px 0"}
-     [:.form-control
+     [:.form-control {:padding ".5rem"}
       [:&:focus {:background-color  "#e4e4e4"
                  :box-shadow "none"}]]
-     [:input {:background-color  "#e4e4e4"
-              :border           "none"}]]
+     [:input :span
+      {:background-color  "#e4e4e4"
+       :border           "none"}]]
     [:.list-segment {:padding "25px"
                      :margin-top "26px"
                      :border-radius "25px"}]

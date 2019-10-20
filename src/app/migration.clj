@@ -12,3 +12,7 @@
   (do
     (migrate schedule/table)
     (migrate group/table)))
+
+(comment
+  (a/-drop schedule/table)
+  (a/-drop group/table))

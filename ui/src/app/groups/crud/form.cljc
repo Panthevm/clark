@@ -7,6 +7,8 @@
 (def schema
   {:type   :form
    :fields {:id            {:type :string}
+            :name          {:type :string}
+            :faculty       {:type :string}
             :department    {:type :string}
             :course        {:type :integer}
             :students      {:type :collection

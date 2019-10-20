@@ -39,3 +39,4 @@
   (let [response (pg/delete (db) table id)]
     {:status 200
      :body (select-keys response [:id])}))
+

@@ -8,6 +8,7 @@
 (def schema
   {:type   :form
    :fields {:id            {:type :string}
+            :discipline    {:type :string}
             :group         {:type :string
                             :on-search ::event/group}
             :resource_type {:type :string}}})

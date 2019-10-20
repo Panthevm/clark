@@ -5,9 +5,9 @@
             [app.pages                :as pages]
             [app.groups.crud.view]))
 
-(defn Item [{{:keys [id department]} :resource}]
+(defn Item [{{:keys [id name]} :resource}]
   [:a.list-group-item.list-group-item-action {:href (href "groups" id)}
-   [:span department]])
+   [:span name]])
 
 (pages/reg-subs-page
  model/index-page
@@ -26,5 +26,6 @@
       (when (empty? items)
         [:a.list-group-item
          [:span "Нет данных"]])
-      (for [item items] ^{:key (:id item)}
-        [Item item])]]]))
+      (map-indexed
+       (fn [idx item] ^{:key idx} [Item item])
+       items)]]]))

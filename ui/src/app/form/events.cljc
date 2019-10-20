@@ -6,7 +6,7 @@
 
 (rf/reg-event-fx
  ::group
- (fn [_ [pid & [{:keys [q path form-path] :as params}]]]
+ (fn [_ [_ & [{:keys [q path form-path]}]]]
    {:method/get {:resource {:type :group}
                  :success  {:event ::group-loaded
                             :params {:form-path form-path
@@ -17,12 +17,11 @@
  ::group-loaded
  (fn [{db :db} [_ {data :data} {:keys [form-path path]}]]
    (let [items (mapv (comp
-                      (fn [{:keys [department] :as item}]
-                        {:value   (select-keys item [:id :department :resource_type])
-                         :display {:content [:div
-                                             [:text department]]
-                                   :path [:department]}})
+                      (fn [{:keys [name] :as item}]
+                        {:value   (select-keys item [:id :name :resource_type])
+                         :display [:text name]})
                       :resource)
                      data)]
-     {:db (assoc-in db (conj (into form-path (zf/get-node-path path)) :items) items)
-      :dispatch [:zf/update-node-schema form-path path {:loading false}]})))
+     {:db (assoc-in db (conj (zf/get-full-path form-path path) :items) items)
+      :dispatch-n [[:zf/update-node-schema form-path path {:display-path [:name]}]
+                   [:zf/update-node-schema form-path path {:loading false}]]})))

@@ -6,7 +6,8 @@
             [app.schedule.crud.view]))
 
 (defn Item [{{:keys [id group]} :resource}]
-  [:a.list-group-item.list-group-item-action {:href (href "schedule" id)}
+  [:button.list-group-item.list-group-item-action
+   {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" id)}])}
    [:span group]])
 
 (pages/reg-subs-page
@@ -19,8 +20,9 @@
       [:div.flex-grow-1
        [:input.form-control.bord]]
       [:div.flex-shrink-1
-       [:a {:href (href "schedule" "create")}
-        [:button.btn.bord.shadow-sm "Создать"]]]]]
+       [:button.btn.bord.shadow-sm
+        {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" "create")}])}
+        "Создать"]]]]
     [:div.container.list-segment.shadow.white
      [:div.list-group.list-group-flush
       (when (empty? items)

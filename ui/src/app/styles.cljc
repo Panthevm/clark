@@ -16,7 +16,10 @@
       {:width "20px"}]]
     [:.navbar {:border-radius "0 0 12px 12px"}]
     [:.bord {:border-radius "12px"}]
+    [:.point {:cursor "pointer"}]
     [:.btn {:background-color "#d5d5d5"}]
+    [:.delete-ico {:font-size "22px"
+                   :padding-right "4px"}]
     [:.white {:background-color "#ffffff"}]
     [:.content-body {:margin-top "40px"}]
     [:.form-row {:padding "5px"}]
@@ -44,7 +47,9 @@
     [:.list-segment {:padding "25px"
                      :margin-top "26px"
                      :border-radius "25px"}]
+    [:.test {:margin-top "10px"}]
     [:.segment {:padding "25px"
+                :height "max-content"
                 :border-radius "25px"}
      [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]
      [:.btn {:margin-left "12px"}]]]))

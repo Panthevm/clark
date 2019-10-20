@@ -22,12 +22,10 @@
                                :type              (field-type type)
                                :on-change         on-change
                                :value             (or value "")}]]))))
-
 (defn *single-combobox
-  [form-path path & [{:keys [placeholder]}]]
+  [form-path path & [{:keys [placeholder label]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
         state          (atom {})
-        display-path   (get-in @node [:items 0 :display :path] path)
         loaded-data    (when-let [on-search (:on-search @node)]
                          (rf/dispatch [on-search {:form-path form-path, :path path}]))
         on-change      (fn [q]
@@ -44,8 +42,9 @@
                           #(when-let [focus-node (:focus-node @state)]
                              (.focus focus-node)) 100))]
     (fn [& _]
-      (let [{:keys [items loading validators errors value input dropdown]} @node]
-        [:div.combobox.form
+      (let [{:keys [items loading display-path validators errors value input dropdown]} @node]
+        [:div.combobox
+         [:text label]
          [:div.input-group
           [:div.input-group-append {:on-click open-dropdown}
            [:span.icon
@@ -56,7 +55,6 @@
              (get-in value display-path))]]
          (when validators
            [:div.invalid-feedback {:style {:display "block"}} (str/join ", " (vals errors))])
-
          (when dropdown
            [:div.menu
             [:div.spinnered.mt-1.input-group
@@ -71,7 +69,7 @@
             [:div.shadow
              (if (empty? items)
                [:li.list-group-item "Ничего не найдено"]
-               (for [{v :value, {d :content} :display :as item} items]
+               (for [{v :value d :display :as item} items]
                  [:li.list-group-item
                   {:key           (:id v)
                    :on-mouse-down #(on-click item)}
@@ -81,5 +79,8 @@
   [form-path path & [attrs]]
   (let [node (rf/subscribe [:zf/node form-path path])]
     (fn [& _]
-      (when @node
-        [*single-combobox form-path path attrs]))))
+      (if @node
+        [*single-combobox form-path path attrs]
+        [:div
+         [:text "Загрузка"]
+         [:input.form-control]]))))

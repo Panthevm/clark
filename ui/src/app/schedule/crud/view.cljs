@@ -12,12 +12,12 @@
     [i/single-combobox form/path [:group] {:label "Группа"}]
     [i/input form/path [:discipline] {:label "Дисциплина"}]]
 
-   [:div.row
+   [:div.flex-row.btn-form
     [:button.btn
      {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}
      "Сохранить"]
     [:button.btn
-     {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri "#/schedule"}])}
+     {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "schedule" id "show")}])}
      "Отменить"]
     (when id
       [:button.btn

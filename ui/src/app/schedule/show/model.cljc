@@ -1,5 +1,6 @@
 (ns app.schedule.show.model
   (:require [re-frame.core          :as rf]
+            [app.helpers            :as h]
             [app.schedule.crud.form :as form]))
 
 (def index-page ::show)
@@ -15,9 +16,13 @@
 
 (rf/reg-event-fx
  ::success-get
- (fn [_ [_ {{data :resource} :data}]]
+ (fn [{db :db} [_ {{data :resource} :data}]]
    (let [id-group (get-in data [:group :id])]
-     {:method/get {:resource {:type :group :id id-group}
+     {:db (assoc-in db [index-page :days] (mapv
+                                           (fn [date]
+                                             (h/date-short-rus date))
+                                           (h/days-in-semester 1)))
+      :method/get {:resource {:type :group :id id-group}
                    :req-id   :group}
       :dispatch [::form/init data]})))
 
@@ -27,6 +32,7 @@
  :<- [:xhr/response :group]
  :<- [:xhr/response :shedule]
  (fn [[page group shedule]]
-   {:shedule (get-in shedule [:data :resource])
+   {:days    (:days page)
+    :shedule (get-in shedule [:data :resource])
     :group   (get-in group [:data :resource])}))
 

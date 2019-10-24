@@ -21,7 +21,7 @@
        [:input.form-control.bord]]
       [:div.flex-shrink-1
        [:a {:href (href "groups" "create")}
-        [:button.btn.bord.shadow-sm "Создать"]]]]]
+        [:button.btn.bord.shadow-sm.create.ml-1 "Создать"]]]]]
     [:div.container.list-segment.shadow.white
      [:div.list-group.list-group-flush
       (when (empty? items)

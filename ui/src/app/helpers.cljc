@@ -1,6 +1,8 @@
 (ns app.helpers
   (:require [clojure.string :as str]
             [app.routes :as routes]
+            [chrono.core :as cc]
+            [chrono.now  :as cn]
             [re-frame.core :as rf]
             [route-map.core :as route-map]))
 
@@ -60,3 +62,31 @@
        (assoc-in [pid :loading] false)
        (assoc-in [pid :status] :error))))
 
+(defn short-name [name]
+  (let [v (str/split name #" ")]
+    (str/join ". " [(first (v 0)) (first (v 1)) (v 2)])))
+
+(defn leap-year? [y]
+  (and (zero? (rem y 4))
+       (or (pos? (rem y 100))
+           (zero? (rem y 400)))))
+
+(defn days-in-month [f]
+  (case (:month f)
+    2 (if (leap-year? (:year f)) 29 28)
+    (1 3 5 7 8 10 12) 31
+    30))
+
+(defn days-in-semester
+  [semester]
+  (let [start (case semester 1 9 2 1)
+        {:keys [month] :as now}   (merge (cn/local) {:day 1 :month start})
+        days  (reduce + (mapv
+                         (fn [i] (days-in-month (assoc now :month i)))
+                         (range month (+ month 4))))]
+    (vec (for [i (range days)]
+           (cc/+ now {:day i})))))
+
+(defn date-short-rus [value]
+  (cc/format value
+             [:day "." :month]))

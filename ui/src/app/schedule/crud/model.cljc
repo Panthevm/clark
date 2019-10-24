@@ -71,5 +71,5 @@
 (rf/reg-event-fx
  ::main-redirect
  (fn [_ [_ {data :data}]]
-   {:dispatch [:zframes.redirect/redirect {:uri "/schedule"}]}))
+   {:dispatch [:zframes.redirect/redirect {:uri (h/href "schedule" (:id data) "show")}]}))
 

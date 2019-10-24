@@ -28,7 +28,7 @@
       [i/input form/path [:department] {:label "Факультет"}]]
      [:div.row>div.col-sm-3
       [i/input form/path [:course]     {:label "Курс"}]]
-     [:div.row
+     [:div.flex-row.btn-form
       [:button.btn
        {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}
        "Сохранить"]

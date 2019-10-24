@@ -1,5 +1,10 @@
 (ns app.styles
-  (:require [garden.core :as garden]))
+  (:require
+   [garden.stylesheet :as stylesheet]
+   [garden.core :as garden]))
+
+(defn rule [tag attrs]
+  ((stylesheet/rule tag) attrs))
 
 (defn style [css]
   [:style (garden/css css)])
@@ -14,6 +19,7 @@
     [:.sticky-table {:overflow-x "scroll"
                      :overflow-y "visible"}
      [:th {:border-top "none"}]
+     [(keyword (str "th:nth-child(2)")) {:padding-left "150px"}]
      [:th :td {:white-space "nowrap"
                :vertical-align "middle"}]
      [:.first-col {:padding-left "150px"}]
@@ -25,16 +31,25 @@
                     :width "141px"
                     :overflow-x "hidden"
                     :text-overflow "ellipsis"}]]
-    [:.table
+    [:.table {:margin-bottom "0px"}
+     [:input {:width "35px"
+              :border "none"
+              :background "content-box"
+              :text-align "center"}]
      [:tr {:font-size "12px"}
-      [:th {:max-content "15px"}]]
+      [:th :td {:max-content "15px"
+                :border-right "1px solid #d0d0d0"}]]
      [:.line {:height "50px"}]
      [:.numeric
       {:width "20px"}]]
     [:.navbar {:border-radius "0 0 12px 12px"}]
     [:.bord {:border-radius "12px"}]
     [:.point {:cursor "pointer"}]
-    [:.btn {:background-color "#d5d5d5"}]
+    [:.create {:background-color "#d5d5d5"}]
+    [:.btn-form
+     [:.btn {:background-color "#d5d5d5"
+             :margin-top "24px"
+             :margin-right "12px"}]]
     [:.delete-ico {:font-size "22px"
                    :padding-right "4px"}]
     [:.white {:background-color "#ffffff"}]
@@ -67,5 +82,4 @@
     [:.segment {:padding "25px"
                 :height "max-content"
                 :border-radius "25px"}
-     [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]
-     [:.btn {:margin-left "12px"}]]]))
+     [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]]]))

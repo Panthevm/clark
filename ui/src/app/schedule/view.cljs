@@ -20,7 +20,7 @@
       [:div.flex-grow-1
        [:input.form-control.bord]]
       [:div.flex-shrink-1
-       [:button.btn.bord.shadow-sm
+       [:button.btn.bord.shadow-sm.create.ml-1
         {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" "create")}])}
         "Создать"]]]]
     [:div.container.list-segment.shadow.white

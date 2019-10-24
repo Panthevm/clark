@@ -2,14 +2,15 @@
   (:require [re-frame.core           :as rf]
             [app.schedule.crud.form  :as form]
             [app.schedule.show.model :as model]
+            [app.helpers             :as h]
             [app.pages               :as pages]))
 
 (defn Line
   [people idx]
   [:tr.line {:key idx}
-   [:td.sticky-col people]
-   [:td.first-col "123"]
-   [:td "2"]
+   [:td.sticky-col (h/short-name people)]
+   [:td.first-col [:input]]
+   [:td [:input]]
    [:td "2"]
    [:td ""]
    [:td "Н"]
@@ -37,55 +38,15 @@
    [:td "Н"]
    [:td "5"]])
 
-(defn Students
-  [group]
-  [:table.table.table-striped.table-sm.border
-   [:thead
-    [:tr
-     [:th.numeric "№"]
-     [:th "Студент"]]]
-   [:tbody
-    (map-indexed
-     (fn [idx people]
-       [Line people (inc idx)])
-     (:students group))]])
-
 (defn Table
-  [group]
+  [group days]
   [:div.sticky-table
-     [:table.table
+   [:table.table.table-striped
       [:thead
        [:tr
         [:th.sticky-col "Студент"]
-        [:th.first-col "02.09"]
-        [:th "02.09"]
-        [:th "03.09"]
-        [:th "04.09"]
-        [:th "05.09"]
-        [:th "06.09"]
-        [:th "07.09"]
-        [:th "01.09"]
-        [:th "02.09"]
-        [:th "03.09"]
-        [:th "04.09"]
-        [:th "05.09"]
-        [:th "06.09"]
-        [:th "07.09"]
-        [:th "01.09"]
-        [:th "02.09"]
-        [:th "03.09"]
-        [:th "04.09"]
-        [:th "05.09"]
-        [:th "06.09"]
-        [:th "07.09"]
-        [:th "01.09"]
-        [:th "02.09"]
-        [:th "03.09"]
-        [:th "04.09"]
-        [:th "05.09"]
-        [:th "06.09"]
-        [:th "07.09"]
-        [:th "08.09"]]]
+        (for [day days]
+          [:th {:key day} day])]]
       [:tbody
        (map-indexed
         (fn [idx people]
@@ -94,7 +55,14 @@
 
 (pages/reg-subs-page
  model/index-page
- (fn [{:keys [group shedule]} {id :id}]
+ (fn [{:keys [group shedule days]} {id :id}]
    [:div.container.segment.shadow.white
-    [:h2 "Журнал"]
-    [Table group]]))
+    [:div.d-flex.justify-content-between
+     [:h2 "Журнал группы " (:name group)]
+     [:i.far.fa-edit.point
+      {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "schedule" id)}])}]]
+    [Table group days]
+    [:div.btn-form
+     [:button.btn
+      {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}
+      "Сохранить"]]]))

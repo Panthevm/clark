@@ -6,7 +6,6 @@ Keeping track of student performance
 
 Backend: 
 ```clj
-[org.clojure/clojure       "1.10.1"]
 [org.immutant/web          "2.1.10"]
 [clj-pg                    "0.0.3"] 
 [ring/ring-json            "0.5.0"] 
@@ -23,7 +22,6 @@ cljs-http                 {:mvn/version "0.1.45"}
 hiccup                    {:mvn/version "1.0.5"}
 garden                    {:mvn/version "1.3.5"}
 route-map                 {:mvn/version "0.0.7-RC1"}
-reagent-material-ui       {:mvn/version "0.2.5"}
 zenform                   {:local/root "zenform"}
 chrono                    {:local/root "chrono"}}
 ```

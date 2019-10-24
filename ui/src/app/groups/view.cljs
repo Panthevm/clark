@@ -6,7 +6,8 @@
             [app.groups.crud.view]))
 
 (defn Item [{{:keys [id name]} :resource}]
-  [:a.list-group-item.list-group-item-action {:href (href "groups" id)}
+  [:a.list-group-item.list-group-item-action
+   {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "groups" id )}])}
    [:span name]])
 
 (pages/reg-subs-page

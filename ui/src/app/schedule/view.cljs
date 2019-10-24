@@ -5,10 +5,10 @@
             [app.pages                :as pages]
             [app.schedule.crud.view]))
 
-(defn Item [{{:keys [id group]} :resource}]
-  [:button.list-group-item.list-group-item-action
-   {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" id)}])}
-   [:span group]])
+(defn Item [{{id :id {name :name} :group} :resource}]
+  [:a.list-group-item.list-group-item-action
+   {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" id "show")}])}
+   [:span name]])
 
 (pages/reg-subs-page
  model/index-page

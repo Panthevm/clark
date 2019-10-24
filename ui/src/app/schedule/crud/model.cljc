@@ -17,7 +17,14 @@
 
 (rf/reg-sub
  index-page
- (fn [_ _]
+ :<- [:form/path [:students]]
+ (fn [idx-students _]
+   {:idx-students idx-students}))
+
+(rf/reg-sub
+ index-page
+ :<- [:page/data index-page]
+ (fn [_]
    {}))
 
                                         ;Create page
@@ -30,9 +37,9 @@
 
 (rf/reg-sub
  create-page
- (fn [_ _]
+ :<- [:page/data create-page]
+ (fn [_]
    {}))
-
                                         ;Events
 (rf/reg-event-fx
  ::fcreate

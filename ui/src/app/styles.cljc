@@ -11,7 +11,24 @@
            :font-size "15px"
            :font-family "GothamPro"
            :height "100%"}
+    [:.sticky-table {:overflow-x "scroll"
+                     :overflow-y "visible"}
+     [:th {:border-top "none"}]
+     [:th :td {:white-space "nowrap"
+               :vertical-align "middle"}]
+     [:.first-col {:padding-left "150px"}]
+     [:.sticky-col {:position "absolute"
+                    :background-color "#ffffff"
+                    :border-right "1px solid black"
+                    :height "inherit"
+                    :top "auto"
+                    :width "141px"
+                    :overflow-x "hidden"
+                    :text-overflow "ellipsis"}]]
     [:.table
+     [:tr {:font-size "12px"}
+      [:th {:max-content "15px"}]]
+     [:.line {:height "50px"}]
      [:.numeric
       {:width "20px"}]]
     [:.navbar {:border-radius "0 0 12px 12px"}]
@@ -47,7 +64,6 @@
     [:.list-segment {:padding "25px"
                      :margin-top "26px"
                      :border-radius "25px"}]
-    [:.test {:margin-top "10px"}]
     [:.segment {:padding "25px"
                 :height "max-content"
                 :border-radius "25px"}

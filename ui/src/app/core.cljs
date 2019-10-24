@@ -10,6 +10,7 @@
 
             [app.groups.view]
             [app.schedule.view]
+            [app.schedule.show.view]
 
             [app.helpers]
             [app.routes]

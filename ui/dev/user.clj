@@ -11,6 +11,6 @@
             :ring-server-options {:port 8081}}})
 
 (comment
-  (repl/start  figwheel-options)
-  (repl/stop "app")
+  (repl/start figwheel-options)
+  (repl/stop  "app")
   (repl/cljs-repl))

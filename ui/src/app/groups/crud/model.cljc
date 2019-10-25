@@ -66,5 +66,5 @@
 
 (rf/reg-event-fx
  ::main-redirect
- (fn [_ [_ {data :data}]]
-   {:dispatch [:zframes.redirect/redirect {:uri "/groups"}]}))
+ (fn [_]
+   {:dispatch [:zframes.redirect/redirect {:uri (h/href "groups")}]}))

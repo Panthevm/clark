@@ -6,8 +6,8 @@
             [app.pages               :as pages]))
 
 (defn Line
-  [people idx]
-  [:tr.line {:key idx}
+  [people]
+  [:tr.line
    [:td.sticky-col (h/short-name people)]
    [:td.first-col [:input]]
    [:td [:input]]
@@ -49,8 +49,8 @@
           [:th {:key day} day])]]
       [:tbody
        (map-indexed
-        (fn [idx people]
-          [Line people (inc idx)])
+        (fn [idx people] ^{:key idx}
+          [Line people idx])
         (:students group))]]])
 
 (pages/reg-subs-page

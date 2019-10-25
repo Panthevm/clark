@@ -28,6 +28,8 @@
       (when (empty? items)
         [:a.list-group-item
          [:span "Нет данных"]])
-      (for [item items] ^{:key (:id item)}
-        [Item item])]]]))
+      (map-indexed 
+       (fn [idx item] ^{:key idx}
+         [Item item])
+       items)]]]))
 

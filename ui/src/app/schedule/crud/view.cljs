@@ -17,7 +17,7 @@
      {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}
      "Сохранить"]
     [:button.btn
-     {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "schedule" id "show")}])}
+     {:on-click #(rf/dispatch [::model/main-redirect {:route id}])}
      "Отменить"]
     (when id
       [:button.btn

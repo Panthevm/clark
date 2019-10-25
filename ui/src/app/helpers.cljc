@@ -64,7 +64,7 @@
 
 (defn short-name [name]
   (let [v (str/split name #" ")]
-    (str/join ". " [(first (v 0)) (first (v 1)) (v 2)])))
+    (str/join ". " [(first (v 1)) (first (v 2)) (v 0)])))
 
 (defn leap-year? [y]
   (and (zero? (rem y 4))

@@ -1,8 +1,6 @@
 (ns app.form.events
   (:require [re-frame.core :as rf]
-            [zenform.model :as zf]
-            [clojure.string :as str]
-            [app.helpers :as helpers]))
+            [zenform.model :as zf]))
 
 (rf/reg-event-fx
  ::group
@@ -10,18 +8,21 @@
    {:method/get {:resource {:type :group}
                  :success  {:event ::group-loaded
                             :params {:form-path form-path
-                                     :path path}}}
-    :dispatch   [:zf/update-node-schema form-path path {:loading true}]}))
+                                     :path path
+                                     :q q}}}
+    :dispatch [:zf/update-node-schema form-path path {:loading true}]}))
 
 (rf/reg-event-fx
  ::group-loaded
- (fn [{db :db} [_ {data :data} {:keys [form-path path]}]]
+ (fn [_ [_ {data :data} {:keys [form-path path q]}]]
    (let [items (mapv (comp
                       (fn [{:keys [name] :as item}]
                         {:value   (select-keys item [:id :name :resource_type])
                          :display [:text name]})
                       :resource)
                      data)]
-     {:db (assoc-in db (conj (zf/get-full-path form-path path) :items) items)
-      :dispatch-n [[:zf/update-node-schema form-path path {:display-path [:name]}]
-                   [:zf/update-node-schema form-path path {:loading false}]]})))
+     {:dispatch [:zf/update-node-schema form-path path (merge {:display-path [:name]
+                                                               :loading false}
+                                                              (if q
+                                                                {:items items}
+                                                                {:default-items items}))]})))

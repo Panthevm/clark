@@ -19,7 +19,7 @@
     [:.sticky-table {:overflow-x "scroll"
                      :overflow-y "visible"}
      [:th {:border-top "none"}]
-     [(keyword (str "th:nth-child(2)")) {:padding-left "150px"}]
+     [(keyword (str "th:nth-child(2)")) {:padding-left "210px"}]
      [:th :td {:white-space "nowrap"
                :vertical-align "middle"}]
      [:.first-col {:padding-left "150px"}]
@@ -28,7 +28,7 @@
                     :border-right "1px solid black"
                     :height "inherit"
                     :top "auto"
-                    :width "141px"
+                    :width "200px"
                     :overflow-x "hidden"
                     :text-overflow "ellipsis"}]]
     [:.table {:margin-bottom "0px"}

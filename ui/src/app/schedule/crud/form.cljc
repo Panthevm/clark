@@ -10,6 +10,7 @@
    :fields {:id            {:type :string}
             :discipline    {:type :string}
             :group         {:type :string
+                            :display-path [:name]
                             :on-search ::event/group}
             :resource_type {:type :string}}})
 

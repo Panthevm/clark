@@ -4,6 +4,22 @@
             [zenform.model :as model]
             [zenform.model  :as zf]))
 
+(rf/reg-event-db
+ :zf/items
+ (fn [db [_ form-path path items]]
+   (update-in db form-path
+              (fn [form]
+                (assoc-in form (conj (model/get-node-path path) :items)
+                          items)))))
+
+(rf/reg-event-db
+ :zf/dropdown
+ (fn [db [_ form-path path open?]]
+   (update-in db form-path
+              (fn [form]
+                (assoc-in form (conj (model/get-node-path path) :dropdown)
+                          open?)))))
+
 (defn field-type
   [type]
   (case type
@@ -22,27 +38,23 @@
                                :type              (field-type type)
                                :on-change         on-change
                                :value             (or value "")}]]))))
-(defn *single-combobox
+(defn *combobox
   [form-path path & [{:keys [placeholder label]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
-        state          (atom {})
-        loaded-data    (when-let [on-search (:on-search @node)]
-                         (rf/dispatch [on-search {:form-path form-path, :path path}]))
-        on-change      (fn [q]
-                         (when-let [on-search (:on-search @node)]
-                           (rf/dispatch [on-search {:q (.. q -target -value) :path path :form-path form-path}])))
-        on-click       (fn [{:keys [value]}]
+        init-data      (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
+        on-change      #(rf/dispatch [(:on-search @node) {:q % :path path :form-path form-path}])
+        on-click       (fn [value]
                          (rf/dispatch [:zf/set-value form-path path value])
-                         (rf/dispatch [:zf/update-node-schema form-path path {:dropdown false}]))
+                         (rf/dispatch [:zf/dropdown  form-path path false]))
         close-dropdown (fn []
-                         (rf/dispatch [:zf/update-node-schema form-path path {:dropdown false}]))
+                         (rf/dispatch [:zf/dropdown form-path path false])
+                         (rf/dispatch [:zf/items    form-path path (:default-items @node)]))
+        state          (atom {})
         open-dropdown  (fn []
-                         (rf/dispatch [:zf/update-node-schema form-path path {:dropdown true}])
-                         (js/setTimeout
-                          #(when-let [focus-node (:focus-node @state)]
-                             (.focus focus-node)) 100))]
+                         (rf/dispatch [:zf/dropdown form-path path true])
+                         (js/setTimeout #(.focus (:focus-node @state)) 100))]
     (fn [& _]
-      (let [{:keys [items loading display-path validators errors value input dropdown]} @node]
+      (let [{:keys [items loading display-path validators errors value dropdown default-items]} @node]
         [:div.combobox
          [:text label]
          [:div.input-group
@@ -54,33 +66,32 @@
              [:text.text-muted placeholder]
              (get-in value display-path))]]
          (when validators
-           [:div.invalid-feedback {:style {:display "block"}} (str/join ", " (vals errors))])
+           [:div.invalid-feedback.d-block (str/join ", " (vals errors))])
          (when dropdown
            [:div.menu
             [:div.spinnered.mt-1.input-group
              [:input.form-control.search {:ref         #(swap! state assoc :focus-node %)
                                           :on-blur     (fn [] (js/setTimeout #(close-dropdown) 100))
                                           :placeholder "Поиск..."
-                                          :on-change   on-change}]
+                                          :on-change   #(on-change (.. % -target -value))}]
              (when loading
                [:div.input-group-appen
                 [:span.form-control
                  [:div.spinner-border.spinner-border-sm]]])]
             [:div.shadow
-             (if (empty? items)
-               [:li.list-group-item "Ничего не найдено"]
-               (for [{v :value d :display :as item} items]
-                 [:li.list-group-item
-                  {:key           (:id v)
-                   :on-mouse-down #(on-click item)}
-                  d]))]])]))))
+             (if-let [data (or items default-items)]
+               (for [{v :value d :display} data]
+                 [:li.list-group-item {:key           (:id v)
+                                       :on-mouse-down #(on-click v)}
+                  d])
+               [:li.list-group-item "Ничего не найдено"])]])]))))
 
-(defn single-combobox
+(defn combobox
   [form-path path & [attrs]]
   (let [node (rf/subscribe [:zf/node form-path path])]
     (fn [& _]
       (if @node
-        [*single-combobox form-path path attrs]
+        [*combobox form-path path attrs]
         [:div
          [:text "Загрузка"]
          [:input.form-control]]))))

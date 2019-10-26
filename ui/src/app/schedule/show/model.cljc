@@ -18,21 +18,18 @@
  ::success-get
  (fn [{db :db} [_ {{data :resource} :data}]]
    (let [id-group (get-in data [:group :id])]
-     {:db (assoc-in db [index-page :days] (mapv
-                                           (fn [date]
-                                             (h/date-short-rus date))
-                                           (h/days-in-semester 1)))
-      :method/get {:resource {:type :group :id id-group}
+     {:method/get {:resource {:type :group :id id-group}
                    :req-id   :group}
       :dispatch [::form/init data]})))
 
 (rf/reg-sub
  index-page
+ :<- [:zf/collection-indexes form/path [:shedule]]
  :<- [:page/data index-page]
  :<- [:xhr/response :group]
  :<- [:xhr/response :shedule]
- (fn [[page group shedule]]
-   {:days    (:days page)
+ (fn [[idx-days page group shedule]]
+   {:idx-days    idx-days
     :shedule (get-in shedule [:data :resource])
     :group   (get-in group [:data :resource])}))
 

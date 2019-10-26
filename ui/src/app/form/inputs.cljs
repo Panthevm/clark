@@ -27,12 +27,12 @@
     "text"))
 
 (defn input
-  [form-path path & [{:keys [label] :as attrs}]]
+  [form-path path & [{:keys [label save-index]}]]
   (let [node      (rf/subscribe [:zf/node form-path path])
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
       (let [{:keys [validators value errors type]} @node]
-        [:div.form-group
+        [:div
          [:text label]
          [:input.form-control {:id                (name (first path))
                                :type              (field-type type)

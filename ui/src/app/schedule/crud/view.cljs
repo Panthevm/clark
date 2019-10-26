@@ -9,8 +9,8 @@
 (defn Form [{:keys [id]}]
   [:div
    [:div.form
-    [i/combobox form/path [:group] {:label "Группа"}]
-    [i/input form/path [:discipline] {:label "Дисциплина"}]]
+    [i/combobox form/path [:group]      {:label "Группа"}]
+    [i/input    form/path [:discipline] {:label "Дисциплина"}]]
 
    [:div.flex-row.btn-form
     [:button.btn

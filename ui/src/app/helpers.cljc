@@ -1,29 +1,12 @@
 (ns app.helpers
   (:require [clojure.string :as str]
             [app.routes :as routes]
+            [chrono.util    :as cu]
             [chrono.core :as cc]
+            [chrono.calendar :as cs]
             [chrono.now  :as cn]
             [re-frame.core :as rf]
             [route-map.core :as route-map]))
-
-(rf/reg-event-db
- ::expand
- (fn [db [_ element]]
-   (update db :expands
-           (fn [coll]
-             (if (some #{element} coll)
-               (into [] (remove #{element} coll))
-               (conj coll element))))))
-
-(rf/reg-event-db
- ::flash
- (fn [db [_ {:keys [msg ts]}]]
-   (assoc db :flash {:msg msg
-                     :ts ts})))
-
-(defn expand? [key]
-  (let [coll @(rf/subscribe [:page/data :expands])]
-    (some? (some #{key} coll))))
 
 (defn to-query-params [params]
   (->> params
@@ -41,12 +24,9 @@
 (defn dissoc-in
   [obj path]
   (cond
-    (empty? path)
-    obj
-    (= (count path) 1)
-    (dissoc obj (first path))
-    :else
-    (update-in obj (drop-last path) dissoc (last path))))
+    (empty? path) obj
+    (= (count path) 1) (dissoc obj (first path))
+    :else (update-in obj (drop-last path) dissoc (last path))))
 
 (rf/reg-event-db
  :xhr/loaded
@@ -66,27 +46,5 @@
   (let [v (str/split name #" ")]
     (str/join ". " [(first (v 1)) (first (v 2)) (v 0)])))
 
-(defn leap-year? [y]
-  (and (zero? (rem y 4))
-       (or (pos? (rem y 100))
-           (zero? (rem y 400)))))
-
-(defn days-in-month [f]
-  (case (:month f)
-    2 (if (leap-year? (:year f)) 29 28)
-    (1 3 5 7 8 10 12) 31
-    30))
-
-(defn days-in-semester
-  [semester]
-  (let [start (case semester 1 9 2 1)
-        {:keys [month] :as now}   (merge (cn/local) {:day 1 :month start})
-        days  (reduce + (mapv
-                         (fn [i] (days-in-month (assoc now :month i)))
-                         (range month (+ month 4))))]
-    (vec (for [i (range days)]
-           (cc/+ now {:day i})))))
-
 (defn date-short-rus [value]
-  (cc/format value
-             [:day "." :month]))
+  (cc/format value [:year "." :month "." :day]))

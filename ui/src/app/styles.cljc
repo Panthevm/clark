@@ -32,19 +32,19 @@
                     :overflow-x "hidden"
                     :text-overflow "ellipsis"}]]
     [:.table {:margin-bottom "0px"}
-     [:input {:width "35px"
+     [:input {:width "100%"
               :border "none"
               :background "content-box"
               :text-align "center"}]
      [:tr {:font-size "12px"}
-      [:th :td {:max-content "15px"
+      [:th :td {:vertical-align "middle"
                 :border-right "1px solid #d0d0d0"}]]
-     [:.line {:height "50px"}]
-     [:.numeric
-      {:width "20px"}]]
+     [:.line {:height "50px"}]]
     [:.navbar {:border-radius "0 0 12px 12px"}]
     [:.bord {:border-radius "12px"}]
     [:.point {:cursor "pointer"}]
+    [:.i-list
+     [:i {:padding-left "10px"}]]
     [:.create {:background-color "#d5d5d5"}]
     [:.btn-form
      [:.btn {:background-color "#d5d5d5"

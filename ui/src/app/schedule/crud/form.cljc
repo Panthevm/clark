@@ -1,6 +1,7 @@
 (ns app.schedule.crud.form
   (:require [re-frame.core     :as rf]
             [zenform.model     :as zf]
+            [zframes.mapper    :as zm]
             [app.form.events   :as event]
             [app.helpers       :as h]))
 
@@ -9,9 +10,9 @@
   {:type   :form
    :fields {:id            {:type :string}
             :discipline    {:type :string}
-            :group         {:type :string
+            :group         {:type         :string
                             :display-path [:name]
-                            :on-search ::event/group}
+                            :on-search    ::event/group}
             :resource_type {:type :string}}})
 
 (defn evaling [db cb]
@@ -21,7 +22,7 @@
 
 (rf/reg-event-fx
  ::init
- (fn [{db :db} [_ & [data]]]
+ (fn [_ [_ & [data]]]
    {:dispatch [:zf/init path schema data]}))
 
 

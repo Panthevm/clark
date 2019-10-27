@@ -27,19 +27,18 @@
     "text"))
 
 (defn input
-  [form-path path & [{:keys [label save-index]}]]
+  [form-path path & [attrs]]
   (let [node      (rf/subscribe [:zf/node form-path path])
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
       (let [{:keys [validators value errors type]} @node]
-        [:div
-         [:text label]
-         [:input.form-control {:id                (name (first path))
-                               :type              (field-type type)
-                               :on-change         on-change
-                               :value             (or value "")}]]))))
+        [:input.form-control {:id                (name (first path))
+                              :class             (:class attrs)
+                              :type              (field-type type)
+                              :on-change         on-change
+                              :value             (or value "")}]))))
 (defn *combobox
-  [form-path path & [{:keys [placeholder label]}]]
+  [form-path path & [{:keys [placeholder]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
         init-data      (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
         on-change      #(rf/dispatch [(:on-search @node) {:q % :path path :form-path form-path}])
@@ -56,7 +55,6 @@
     (fn [& _]
       (let [{:keys [items loading display-path validators errors value dropdown default-items]} @node]
         [:div.combobox
-         [:text label]
          [:div.input-group
           [:div.input-group-append {:on-click open-dropdown}
            [:span.icon

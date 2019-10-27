@@ -1,15 +1,18 @@
 (ns app.schedule.crud.form
   (:require [re-frame.core     :as rf]
             [zenform.model     :as zf]
-            [zframes.mapper    :as zm]
-            [app.form.events   :as event]
-            [app.helpers       :as h]))
+            [app.form.events   :as event]))
 
 (def path [:form :schedule])
 (def schema
   {:type   :form
    :fields {:id            {:type :string}
             :discipline    {:type :string}
+            :schedule       {:type :collection
+                             :item {:type :form
+                                    :fields {:date {:type :string}
+                                             :assessment {:type :collection
+                                                          :item {:type :string}}}}}
             :group         {:type         :string
                             :display-path [:name]
                             :on-search    ::event/group}

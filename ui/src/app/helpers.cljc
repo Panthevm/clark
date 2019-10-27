@@ -1,7 +1,6 @@
 (ns app.helpers
   (:require [clojure.string :as str]
             [app.routes :as routes]
-            [chrono.util    :as cu]
             [chrono.core :as cc]
             [chrono.calendar :as cs]
             [chrono.now  :as cn]
@@ -45,6 +44,8 @@
 (defn short-name [name]
   (let [v (str/split name #" ")]
     (str/join ". " [(first (v 1)) (first (v 2)) (v 0)])))
-
+                                        ;Date
 (defn date-short-rus [value]
-  (cc/format value [:year "." :month "." :day]))
+  (cc/format value [:month "." :day]))
+
+(def now (cn/local))

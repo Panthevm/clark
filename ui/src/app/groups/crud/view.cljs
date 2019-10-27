@@ -21,13 +21,17 @@
     [:div.col-sm.segment.shadow.white.form
      [:h2 "Основная информация"]
      [:div.row>div.col-sm
-      [i/input form/path [:name]       {:label "Название"}]]
+      [:label  "Название"]
+      [i/input form/path [:name]]]
      [:div.row>div.col-sm
-      [i/input form/path [:faculty]    {:label "Факультет"}]]
+      [:label "Факультет"]
+      [i/input form/path [:faculty]]]
      [:div.row>div.col-sm
-      [i/input form/path [:department] {:label "Факультет"}]]
+      [:label "Факультет"]
+      [i/input form/path [:department]]]
      [:div.row>div.col-sm-3
-      [i/input form/path [:course]     {:label "Курс"}]]
+      [:label "Курс"]
+      [i/input form/path [:course]]]
      [:div.flex-row.btn-form
       [:button.btn
        {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}

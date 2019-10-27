@@ -1,5 +1,6 @@
 (ns app.schedule.show.model
   (:require [re-frame.core          :as rf]
+            [zenform.model          :as zf]
             [app.helpers            :as h]
             [app.schedule.crud.form :as form]))
 
@@ -24,7 +25,7 @@
 
 (rf/reg-sub
  index-page
- :<- [:zf/collection-indexes form/path [:shedule]]
+ :<- [:zf/collection-indexes form/path [:schedule]]
  :<- [:page/data index-page]
  :<- [:xhr/response :group]
  :<- [:xhr/response :shedule]
@@ -33,3 +34,7 @@
     :shedule (get-in shedule [:data :resource])
     :group   (get-in group [:data :resource])}))
 
+(rf/reg-event-fx
+ ::add-column
+ (fn [{db :db} _]
+   {:dispatch [:zf/add-collection-item form/path [:schedule] {:date (h/date-short-rus h/now)} ]}))

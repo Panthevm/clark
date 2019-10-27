@@ -19,7 +19,7 @@
     [:.sticky-table {:overflow-x "scroll"
                      :overflow-y "visible"}
      [:th {:border-top "none"}]
-     [(keyword (str "th:nth-child(2)")) {:padding-left "210px"}]
+     [(keyword (str "th:nth-child(2)")) {:padding-left "145px"}]
      [:th :td {:white-space "nowrap"
                :vertical-align "middle"}]
      [:.first-col {:padding-left "150px"}]
@@ -28,10 +28,16 @@
                     :border-right "1px solid black"
                     :height "inherit"
                     :top "auto"
-                    :width "200px"
+                    :width "140px"
                     :overflow-x "hidden"
                     :text-overflow "ellipsis"}]]
     [:.table {:margin-bottom "0px"}
+     [:.form-control {:padding "0"
+                      :border-radius "0"
+                      :min-width "40px"
+                      :font-size "12px"}
+      [:&:focus {:background "content-box"
+                 :box-shadow "0 0 0 5px black"}]]
      [:input {:width "100%"
               :border "none"
               :background "content-box"
@@ -39,7 +45,7 @@
      [:tr {:font-size "12px"}
       [:th :td {:vertical-align "middle"
                 :border-right "1px solid #d0d0d0"}]]
-     [:.line {:height "50px"}]]
+     [:.line {:height "43px"}]]
     [:.navbar {:border-radius "0 0 12px 12px"}]
     [:.bord {:border-radius "12px"}]
     [:.point {:cursor "pointer"}]

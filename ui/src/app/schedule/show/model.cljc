@@ -30,11 +30,28 @@
  :<- [:xhr/response :group]
  :<- [:xhr/response :shedule]
  (fn [[idx-days page group shedule]]
-   {:idx-days    idx-days
-    :shedule (get-in shedule [:data :resource])
-    :group   (get-in group [:data :resource])}))
+   (merge page
+    {:idx-days idx-days
+     :shedule  (get-in shedule [:data :resource])
+     :group    (get-in group [:data :resource])})))
 
 (rf/reg-event-fx
  ::add-column
  (fn [{db :db} _]
    {:dispatch [:zf/add-collection-item form/path [:schedule] {:date (h/date-short-rus h/now)} ]}))
+
+(rf/reg-event-fx
+ ::remove-select
+ (fn [{db :db} _]
+   {:db (re-frame.utils/dissoc-in db [index-page :selected-colum])}))
+
+(rf/reg-event-fx
+ ::remove-column
+ (fn [_ [_ idx]]
+   {:dispatch-n [[::remove-select]
+                 [:zf/remove-collection-item form/path [:schedule] idx]]}))
+
+(rf/reg-event-db
+ ::select-column
+ (fn [db [_ idx]]
+   (assoc-in db [index-page :selected-colum] idx)))

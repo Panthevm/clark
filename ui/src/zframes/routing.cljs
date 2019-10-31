@@ -189,7 +189,7 @@
 
 (rf/reg-fx
  :route-map/redirect
- (fn [href] (aset (.-location js/window) "hash" href)))
+ (fn [href] (aset (.-location js/window) "hash" {:uri href})))
 
 (defn to-query-params [params]
   (->> params

@@ -71,8 +71,6 @@
 (rf/reg-event-fx
  ::main-redirect
  (fn [_ [_ {{{id :id} :resource} :data route :route}]]
-   {:dispatch [:zframes.redirect/redirect {:uri
-                                           (if-let [id (or id route)]
-                                             (h/href "schedule" id "show")
-                                             (h/href "schedule"))}]}))
-
+   {:dispatch [:redirect (if-let [id (or id route)]
+                           (h/href "schedule" id "show")
+                           "#/schedule")]}))

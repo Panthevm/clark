@@ -8,12 +8,10 @@
  (fn [db [_ pid]]
    (get db pid)))
 
-(defn subscribed-page [page-idx view]
+(defn subscribed-page [page view]
   (fn [params]
-    (let [m (rf/subscribe [page-idx])]
+    (let [m (rf/subscribe [page])]
       (fn [] [view @m params]))))
 
-(defn reg-subs-page
-  "register subscribed page under keyword for routing"
-  [key f & [layout-key]]
+(defn reg-subs-page [key f]
   (swap! pages assoc key (subscribed-page key f)))

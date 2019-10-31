@@ -37,7 +37,7 @@
        {:on-click #(rf/dispatch (if id [::model/update id] [::model/fcreate]))}
        "Сохранить"]
       [:button.btn
-       {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri "#/groups"}])}
+       {:on-click #(rf/dispatch [:redirect "#/groups"])}
        "Отменить"]
       (when id
         [:button.btn

@@ -7,7 +7,7 @@
 
 (defn Item [{{id :id {name :name} :group} :resource}]
   [:a.list-group-item.list-group-item-action
-   {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" id "show")}])}
+   {:on-click #(rf/dispatch [:redirect (href "schedule" id "show")])}
    [:span name]])
 
 (pages/reg-subs-page
@@ -21,7 +21,7 @@
        [:input.form-control.bord]]
       [:div.flex-shrink-1
        [:button.btn.bord.shadow-sm.create.ml-1
-        {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (href "schedule" "create")}])}
+        {:on-click #(rf/dispatch [:redirect (href "schedule" "create")])}
         "Создать"]]]]
     [:div.container.list-segment.shadow.white
      [:div.list-group.list-group-flush

@@ -1,30 +1,38 @@
 (ns app.layout
   (:require [re-frame.core            :as rf]
-            [app.styles               :as styles]
-            [app.helpers              :as helpers]))
+            [app.styles               :refer [app-styles]]
+            [clojure.string           :refer [includes?]]
+            [app.helpers              :refer [href]]))
 
 (rf/reg-sub
  ::navigation
  :<- [:route-map/fragment]
- (fn [fragment _]
-   [{:id "schedule" :href (helpers/href "schedule")  :display "Журналы"}
-    {:id "groups"   :href (helpers/href "groups")    :display "Группы"}]))
+ (fn [fragment]
+   (->>
+    [{:href (href "schedule")  :display "Журналы"}
+     {:href (href "groups")    :display "Группы"}]
+    (map
+     (fn [link]
+       (if (includes? (:href link) fragment)
+         (assoc link :class "active font-weight-bold")
+         link))))))
 
-(defn navbar []
-  (let [menu (rf/subscribe [::navigation])]
-    (fn []
-      [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
-       [:div.container.px-0
-        [:button.navbar-toggler
-         [:i.far.fa-bars]]
-        [:div.navbar-collapse
-         [:div.navbar-nav
-          (for [{:keys [id href display]} @menu]
-            [:a.nav-item.nav-link {:key id :href href}
-             display])]]]])))
+(defn navbar [menu]
+  [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
+   [:div.container
+    [:button.navbar-toggler
+     [:i.far.fa-bars]]
+    [:div.navbar-collapse
+     [:div.navbar-nav
+      (map-indexed
+       (fn [idx {:keys [href display class]}]
+         [:a.nav-item.nav-link {:key idx :href href :class class}
+          display])
+       menu)]]]])
 
 (defn layout []
-  (fn [cnt]
-    [:div.app styles/app-styles
-     [navbar]
-     [:div.content-body cnt]]))
+  (let [menu (rf/subscribe [::navigation])]
+    (fn [cnt]
+      [:div.app app-styles
+       [navbar @menu]
+       [:div.content-body cnt]])))

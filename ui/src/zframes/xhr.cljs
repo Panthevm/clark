@@ -156,7 +156,7 @@
 (rf/reg-event-fx
  :xhr/redirect
  (fn [_ [_ _ opts]]
-   {:dispatch [:zframes.redirect/redirect opts]}))
+   {:dispatch [:redirect opts]}))
 
 (rf/reg-event-db
  ::fetch-start

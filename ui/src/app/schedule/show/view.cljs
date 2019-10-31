@@ -39,7 +39,7 @@
      [:h2 "Журнал группы " (:name group)]
      [:div.i-list
       [:i.far.fa-edit.point
-       {:on-click #(rf/dispatch [:zframes.redirect/redirect {:uri (h/href "schedule" id)}])}]
+       {:on-click #(rf/dispatch [:redirect (h/href "schedule" id)])}]
       [:i.far.fa-plus.point
        {:on-click #(rf/dispatch [::model/add-column])}]
       (when selected-colum

@@ -11,15 +11,15 @@
   (set! (.-hash (.-location js/window)) url))
 
 (rf/reg-fx
- ::redirect
+ :redirect
  (fn [opts]
-   (redirect (str (:uri opts)
+   (redirect (str opts
                   (when-let [params (:params opts)]
                     (window-location/gen-query-string params))))))
 (rf/reg-event-fx
- ::redirect
+ :redirect
  (fn [fx [_ opts]]
-   {::redirect opts}))
+   {:redirect opts}))
 
 (rf/reg-fx
  ::page-redirect
@@ -48,12 +48,12 @@
          nil-keys (reduce (fn [acc [k v]]
                             (if (nil? v) (conj acc k) acc)) [] params)
          old-params (or (get-in db [:fragment-params :params]) {})]
-     {::redirect {:uri pth
+     {:redirect {:uri pth
                   :params (apply dissoc (merge old-params params)
                                  nil-keys)}})))
 (rf/reg-event-fx
  ::set-params
  (fn [{db :db} [_ params]]
    (let [pth (get db :fragment-path)]
-     {::redirect {:uri pth
+     {:redirect {:uri pth
                   :params params}})))

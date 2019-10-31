@@ -36,21 +36,19 @@
       :db db})))
 
 (defn not-found-page []
-  [:div.not-found
+  [:div.container
    [:h3 "Страница не найдена"]])
 
 (defn current-page []
-  (let [route (rf/subscribe [:route-map/current-route])]
-    (fn []
-      (let [page   (get @app.pages/pages (:match @route))
-            params (:params @route)]
-        [app.layout/layout
-         (if page
-           [page params]
-           [not-found-page])]))))
+  (let [route  @(rf/subscribe [:route-map/current-route])
+        params (:params route)
+        page   (get @app.pages/pages (:match route))]
+    [app.layout/layout
+     (if page
+       [page params]
+       [not-found-page])]))
 
 (defn mount-root []
   (rf/dispatch-sync [::initialize])
   (reagent/render [current-page] (.getElementById js/document "app")))
 
-(defn ^:after-load re-render [] (mount-root))

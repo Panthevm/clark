@@ -2,7 +2,7 @@
   (:require [re-frame.core  :as rf]
             [clojure.string :as str]
             [zenform.model :as model]
-            [zenform.model  :as zf]))
+            [zframes.debounce :as debounce]))
 
 (rf/reg-event-db
  :zf/items
@@ -41,7 +41,7 @@
   [form-path path & [{:keys [placeholder]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
         init-data      (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
-        on-change      #(rf/dispatch [(:on-search @node) {:q % :path path :form-path form-path}])
+        on-change      #(debounce/debounce [(:on-search @node) {:q % :path path :form-path form-path}])#_(rf/dispatch [(:on-search @node) {:q % :path path :form-path form-path}])
         on-click       (fn [value]
                          (rf/dispatch [:zf/set-value form-path path value])
                          (rf/dispatch [:zf/dropdown  form-path path false]))
@@ -51,9 +51,10 @@
         state          (atom {})
         open-dropdown  (fn []
                          (rf/dispatch [:zf/dropdown form-path path true])
-                         (js/setTimeout #(.focus (:focus-node @state)) 100))]
+                         (js/setTimeout #(.focus (:focus @state)) 100))]
     (fn [& _]
-      (let [{:keys [items loading display-path validators errors value dropdown default-items]} @node]
+      (let [{:keys [items loading display-path validators errors value dropdown default-items]} @node
+            data (or items default-items)]
         [:div.combobox
          [:div.input-group
           [:div.input-group-append {:on-click open-dropdown}
@@ -68,7 +69,7 @@
          (when dropdown
            [:div.menu
             [:div.spinnered.mt-1.input-group
-             [:input.form-control.search {:ref         #(swap! state assoc :focus-node %)
+             [:input.form-control.search {:ref         #(swap! state assoc :focus %)
                                           :on-blur     (fn [] (js/setTimeout #(close-dropdown) 100))
                                           :placeholder "Поиск..."
                                           :on-change   #(on-change (.. % -target -value))}]
@@ -77,11 +78,12 @@
                 [:span.form-control
                  [:div.spinner-border.spinner-border-sm]]])]
             [:div.shadow
-             (if-let [data (or items default-items)]
-               (for [{v :value d :display} data]
-                 [:li.list-group-item {:key           (:id v)
-                                       :on-mouse-down #(on-click v)}
-                  d])
+             (if-not (empty? data)
+               (map-indexed
+                (fn [idx {v :value d :display}] ^{:key idx}
+                  [:li.list-group-item {:on-mouse-down #(on-click v)}
+                   d])
+                data)
                [:li.list-group-item "Ничего не найдено"])]])]))))
 
 (defn combobox

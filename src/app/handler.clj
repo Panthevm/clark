@@ -7,7 +7,9 @@
 
 (defn default [table]
   [(str "/" (name (:table table)))
-   ["" {:get  {:handler (fn [req] (a/-get  table req))}
+   ["" {:get  {:parameters {:query {:ilike string?}
+                            :ilike {:int string?}}
+               :handler (fn [req] (a/-get  table req))}
         :post {:handler (fn [req] (a/-post table req))}}]
    ["/:id" {:get    {:handler (fn [req] (a/-select table req))}
             :put    {:handler (fn [req] (a/-put    table req))}

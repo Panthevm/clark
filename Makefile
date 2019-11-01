@@ -1,6 +1,9 @@
 repl:
 	  lein repl
 
+ui-build:
+	cd ui && clj -m build
+
 jar:
 		lein uberjar && java -jar target/app.jar host 0.0.0.0 port 8080
 

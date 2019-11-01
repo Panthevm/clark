@@ -1,21 +1,21 @@
 (ns ^:figwheel-hooks app.core
-  (:require [reagent.core :as reagent]
+  (:require [reagent.core :as r]
             [re-frame.core :as rf]
 
             [zframes.routing]
             [zframes.redirect]
             [zframes.xhr]
             [zframes.method]
+            [zframes.debounce]
             [zframes.window-location]
 
             [app.groups.view]
             [app.schedule.view]
             [app.schedule.show.view]
 
-            [app.helpers]
             [app.routes]
-            [app.layout]
-            [app.pages]))
+            [app.layout :refer [layout]]
+            [app.pages :refer [pages]]))
 
 (def default-config
   {:base-url     "http://localhost:8080"
@@ -42,13 +42,12 @@
 (defn current-page []
   (let [route  @(rf/subscribe [:route-map/current-route])
         params (:params route)
-        page   (get @app.pages/pages (:match route))]
-    [app.layout/layout
+        page   (get @pages (:match route))]
+    [layout
      (if page
        [page params]
        [not-found-page])]))
 
 (defn mount-root []
   (rf/dispatch-sync [::initialize])
-  (reagent/render [current-page] (.getElementById js/document "app")))
-
+  (r/render [current-page] (.getElementById js/document "app")))

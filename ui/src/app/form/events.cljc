@@ -1,15 +1,15 @@
 (ns app.form.events
-  (:require [re-frame.core :as rf]
-            [zenform.model :as zf]))
+  (:require [re-frame.core :as rf]))
 
 (rf/reg-event-fx
  ::group
  (fn [_ [_ & [{:keys [q path form-path]}]]]
-   {:method/get {:resource {:type :group}
-                 :success  {:event ::group-loaded
-                            :params {:form-path form-path
-                                     :path path
-                                     :q q}}}
+   {:xhr/fetch {:uri    "/group"
+                :params {:ilike q}
+                :success  {:event ::group-loaded
+                           :params {:path path
+                                    :form-path form-path
+                                    :q q}}}
     :dispatch [:zf/update-node-schema form-path path {:loading true}]}))
 
 (rf/reg-event-fx
@@ -17,6 +17,7 @@
  (fn [_ [_ {data :data} {:keys [form-path path q]}]]
    (let [items (mapv (comp
                       (fn [{:keys [name] :as item}]
+                        (prn item)
                         {:value   (select-keys item [:id :name :resource_type])
                          :display [:text name]})
                       :resource)

@@ -38,8 +38,7 @@
               (:title link)])
            @navs)]]]])))
 
-(defn layout []
-  (fn [cnt]
-    [:div.app app-styles
-     [navbar]
-     [:div.content-body cnt]]))
+(defn layout [cnt]
+  [:div.app app-styles
+   [navbar]
+   [:div.content-body cnt]])

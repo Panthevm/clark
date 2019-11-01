@@ -16,5 +16,3 @@
  :<- [:xhr/response :group]
  (fn [{groups :data} _]
    {:items groups}))
-
-

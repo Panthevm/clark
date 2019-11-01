@@ -64,5 +64,4 @@
                     :success  {:event ::main-redirect}}}))
 
 (rf/reg-event-fx
- ::main-redirect
- (fn [_] {:dispatch [:redirect "#/groups"]}))
+ ::main-redirect (fn [_] {:redirect "#/groups"}))

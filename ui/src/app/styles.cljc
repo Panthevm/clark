@@ -58,7 +58,7 @@
              :margin-right "12px"}]]
     [:.delete-ico {:font-size "22px"
                    :padding-right "4px"}]
-    [:a {:outline "none"}]
+    [:a :button:focus {:outline "none"}]
     [:.white {:background-color "#ffffff"}]
     [:.content-body {:margin-top "40px"}]
     [:.form-row {:padding "5px"}]

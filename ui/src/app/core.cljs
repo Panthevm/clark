@@ -51,3 +51,5 @@
 (defn mount-root []
   (rf/dispatch-sync [::initialize])
   (r/render [current-page] (.getElementById js/document "app")))
+
+(defn ^:after-load re-render [] (mount-root))

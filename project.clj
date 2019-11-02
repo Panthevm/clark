@@ -5,7 +5,11 @@
                  [clj-pg                    "0.0.3"]
                  [ring/ring-json            "0.5.0"]
                  [metosin/reitit-ring       "0.3.10"]
+                 [lt.tokenmill/docx-utils   "1.0.3"]
                  [ring-cors                 "0.1.13"]]
   :main app.dev
   :uberjar-name "app.jar"
-  :profiles {:uberjar {:aot [app.dev]}})
+  :resource-paths ["resources"]
+  :profiles {:dev     {:resource-paths ["src/resources"]}
+             :repl    {:resource-paths ["src/resources"]}
+             :uberjar {:aot [app.dev]}})

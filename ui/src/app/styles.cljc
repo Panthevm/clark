@@ -34,7 +34,7 @@
     [:.table {:margin-bottom "0px"}
      [:.form-control {:padding "0"
                       :border-radius "0"
-                      :min-width "40px"
+                      :min-width "60px"
                       :font-size "12px"}
       [:&:focus {:background "content-box"
                  :box-shadow "0 0 0 5px black"}]]

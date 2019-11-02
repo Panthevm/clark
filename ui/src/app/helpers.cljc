@@ -17,6 +17,8 @@
   {:iso [:year "-" :month "-" :day]
    :ru  [:day "." :month "." :year]})
 
+(def now (cc/format (cn/local) (:iso date-format)))
+
 (defn data-post [date]
   (-> date
       (cc/parse (:ru date-format))
@@ -26,5 +28,3 @@
   (-> date
       (cc/parse iso-fmt)
       (cc/format (:ru date-format))))
-
-(def now (cc/format (cn/local) (:iso date-format)))

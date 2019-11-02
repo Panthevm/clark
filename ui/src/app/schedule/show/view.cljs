@@ -17,7 +17,7 @@
 (defn Table
   [{:keys [group idx-days] :as page}]
   [:div.sticky-table
-   [:table.table.table-striped.table-sm.table-hover
+   [:table.table.table-striped.table-sm
     [:thead
      [:tr.d-flex.align-items-start
       [:th.sticky-col.line]

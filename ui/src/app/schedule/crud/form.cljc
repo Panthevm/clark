@@ -1,5 +1,6 @@
 (ns app.schedule.crud.form
   (:require [re-frame.core     :as rf]
+            [app.helpers       :as h]
             [zenform.model     :as zf]
             [app.form.events   :as event]))
 
@@ -10,7 +11,8 @@
             :discipline    {:type :string}
             :schedule       {:type :collection
                              :item {:type :form
-                                    :fields {:date {:type :string}
+                                    :fields {:date {:type :date
+                                                    :post-fn h/data-post}
                                              :assessment {:type :collection
                                                           :item {:type :string}}}}}
             :group         {:type         :string

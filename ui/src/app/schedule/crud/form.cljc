@@ -11,8 +11,9 @@
             :discipline    {:type :string}
             :schedule       {:type :collection
                              :item {:type :form
-                                    :fields {:date {:type :date
-                                                    :post-fn h/data-post}
+                                    :fields {:date {:type :string
+                                                    :get h/date-get
+                                                    :post h/data-post}
                                              :assessment {:type :collection
                                                           :item {:type :string}}}}}
             :group         {:type         :string

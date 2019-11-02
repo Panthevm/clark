@@ -8,7 +8,7 @@
             [app.pages               :as pages]))
 
 (defn Line
-  [people row {:keys [idx-days selected-colum]}]
+  [people row {:keys [idx-days]}]
   [:tr.line.d-flex.align-items-start
    [:td.sticky-col (h/short-name people)]
    (for [col idx-days] ^{:key col}

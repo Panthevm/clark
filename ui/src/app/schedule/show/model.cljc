@@ -1,6 +1,5 @@
 (ns app.schedule.show.model
   (:require [re-frame.core          :as rf]
-            [zenform.model          :as zf]
             [app.helpers            :as h]
             [app.schedule.crud.form :as form]))
 
@@ -17,7 +16,7 @@
 
 (rf/reg-event-fx
  ::success-get
- (fn [{db :db} [_ {{data :resource} :data}]]
+ (fn [_ [_ {{data :resource} :data}]]
    (let [id-group (get-in data [:group :id])]
      {:method/get {:resource {:type :group :id id-group}
                    :req-id   :group}
@@ -37,13 +36,13 @@
 
 (rf/reg-event-fx
  ::add-column
- (fn [{db :db} _]
-   {:dispatch [:zf/add-collection-item form/path [:schedule] {:date (h/date-short-rus h/now)} ]}))
+ (fn []
+   {:dispatch [:zf/add-collection-item form/path [:schedule] {:date h/now}]}))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::remove-select
- (fn [{db :db} _]
-   {:db (re-frame.utils/dissoc-in db [index-page :selected-colum])}))
+ (fn [db]
+   (re-frame.utils/dissoc-in db [index-page :selected-colum])))
 
 (rf/reg-event-fx
  ::remove-column

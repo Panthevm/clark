@@ -12,6 +12,7 @@
 
                                         ;Date
 (def iso-fmt [:year "-" :month "-" :day "T" :hour ":" :min ":" :sec])
+
 (def date-format
   {:iso [:year "-" :month "-" :day]
    :ru  [:day "." :month "." :year]})
@@ -21,7 +22,9 @@
       (cc/parse (:ru date-format))
       (cc/format (:iso date-format))))
 
-(defn date-short-rus [value]
-  (cc/format value (:ru date-format)))
+(defn date-get [date]
+  (-> date
+      (cc/parse iso-fmt)
+      (cc/format (:ru date-format))))
 
-(def now (cn/local))
+(def now (cc/format (cn/local) (:iso date-format)))

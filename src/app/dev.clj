@@ -4,6 +4,7 @@
             [app.handler              :refer [handler]]
             [environ.core             :refer (env)]
             [app.migration            :refer [migration]]
+            [app.auth                 :as auth]
             (ring.middleware
              [cors :refer [wrap-cors]]
              [keyword-params :refer [wrap-keyword-params]]
@@ -15,6 +16,7 @@
   (-> #'handler
       (wrap-keyword-params)
       (wrap-params)
+      (auth/wrap)
       (wrap-json-body {:keywords? true})
       (wrap-json-response)
       (wrap-cors :access-control-allow-origin [#".*"]

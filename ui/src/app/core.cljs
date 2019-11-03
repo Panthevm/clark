@@ -12,6 +12,7 @@
             [app.groups.view]
             [app.schedule.view]
             [app.schedule.show.view]
+            [app.login.view]
 
             [app.routes]
             [app.layout :refer [layout]]

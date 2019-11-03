@@ -2,7 +2,8 @@
   (:require [app.actions :as a]
             (app.resources
              [schedule :as schedule]
-             [group    :as group])))
+             [group    :as group]
+             [user     :as user])))
 
 (defn migrate [table]
   (when (not (a/-exists? (:table table)))
@@ -11,8 +12,10 @@
 (defn migration []
   (do
     (migrate schedule/table)
+    (migrate user/table)
     (migrate group/table)))
 
 (comment
+  (a/-drop user/table)
   (a/-drop schedule/table)
   (a/-drop group/table))

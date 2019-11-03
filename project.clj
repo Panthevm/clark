@@ -6,6 +6,10 @@
                  [ring/ring-json            "0.5.0"]
                  [metosin/reitit-ring       "0.3.10"]
                  [lt.tokenmill/docx-utils   "1.0.3"]
+                 [buddy/buddy-auth          "2.2.0"]
+                 [buddy/buddy-hashers       "1.4.0"]
+                 [buddy/buddy-sign          "3.1.0"]
+                 [org.clojure/data.codec    "0.1.1"]
                  [ring-cors                 "0.1.13"]]
   :main app.dev
   :uberjar-name "app.jar"

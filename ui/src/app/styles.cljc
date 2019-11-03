@@ -88,5 +88,6 @@
                      :border-radius "25px"}]
     [:.segment {:padding "25px"
                 :height "max-content"
+                :min-width "500px"
                 :border-radius "25px"}
      [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]]]))

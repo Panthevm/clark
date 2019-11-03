@@ -32,7 +32,7 @@
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
       (let [{:keys [validators value errors type]} @node]
-        [:input.form-control {:id                (name (first path))
+        [:input.form-control.mb-4 {:id                (name (first path))
                               :class             (:class attrs)
                               :type              (field-type type)
                               :on-change         on-change
@@ -55,7 +55,7 @@
     (fn [& _]
       (let [{:keys [items loading display-path validators errors value dropdown default-items]} @node
             data (or items default-items)]
-        [:div.combobox
+        [:div.combobox.mb-4
          [:div.input-group
           [:div.input-group-append {:on-click open-dropdown}
            [:span.icon

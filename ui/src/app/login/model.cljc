@@ -3,7 +3,7 @@
             [app.login.form :as form]))
 
 (def login-page    ::login-page)
-(def registration  ::registration)
+(def registration  ::reg-page)
 
 (rf/reg-event-fx
  login-page
@@ -37,7 +37,7 @@
    {:json/fetch {:uri         "/login"
                  :method      :post
                  :credentials "same-origin"
-                 :success     {:event ::grant-access}
+                 :success     {:event :zframes.auth/signin-success}
                  :body        form}}))
 
 (rf/reg-event-fx
@@ -52,9 +52,3 @@
                  :method      :post
                  :credentials "same-origin"
                  :body        form}}))
-
-(rf/reg-event-fx
- ::grant-access
- (fn [_ [_ {resp :data}]]
-   {:dispatch-n [[:cookies/set {:key :asid :value (get resp :token)}]
-                 [:redirect "#/groups"]]}))

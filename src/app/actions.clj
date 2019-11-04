@@ -3,11 +3,21 @@
             [honeysql.core :as hsql]
             [clj-pg.honey :as pg]))
 
-(defn ok [response] {:status 200 :body response})
+(defn ok      [response] {:status 200 :body response})
+(defn created [responce] {:status 201 :body responce})
+(defn error   []         {:status 404 :body "error"})
 
 (defn -exists? [table] (pg/table-exists? (db) table))
 (defn -create  [table] (pg/create-table  (db) table))
 (defn -drop    [table] (pg/drop-table    (db) table))
+
+(defn make-resource
+  [data table]
+  (pg/update (db) table
+             (update data :resource
+                     #(assoc %
+                             :resource_type (-> table :table name)
+                             :id (:id data)))))
 
 (defn -get [table {params :params}]
   (let [q (:ilike params)]
@@ -22,8 +32,7 @@
                                     #(assoc %
                                             :resource_type (-> table :table name)
                                             :id (:id insert))))]
-    {:status 201
-     :body   response}))
+    (created response)))
 
 (defn -select [table {{id :id} :path-params :as ss}]
   (let [response (pg/query-first (db) {:select [:resource]

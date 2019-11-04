@@ -17,9 +17,8 @@
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment]
-   (cond->>
-       [{:href (href "schedule") :title "Журналы"}
-        {:href (href "groups")   :title "Группы"}]
+   (cond->> [{:href (href "schedule") :title "Журналы"}
+             {:href (href "groups")   :title "Группы"}]
      fragment (current-nav fragment))))
 
 (defn navbar []

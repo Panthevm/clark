@@ -35,7 +35,7 @@
     form-data))
 
 
-(defn *json-fetch [{:keys [uri format headers cookies is-fetching-path params success error] :as opts}]
+(defn *json-fetch [{:keys [uri format headers is-fetching-path params success error] :as opts}]
   (let [{token :token base-url :base-url}    (get-in @db/app-db [:xhr/config])
         fmt (or (get {"json" "application/json" "yaml" "text/yaml"} format) "application/json")
         headers (cond-> {"accept" fmt

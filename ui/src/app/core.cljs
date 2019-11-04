@@ -4,13 +4,15 @@
 
             [zframes.routing]
             [zframes.redirect]
-            [zframes.cookies]
+            [zframes.auth]
+            [zframes.storage]
             [zframes.xhr]
             [zframes.method]
             [zframes.debounce]
             [zframes.window-location]
 
             [app.groups.view]
+            [app.profile.view]
             [app.schedule.view]
             [app.schedule.show.view]
             [app.login.view]
@@ -28,14 +30,19 @@
 
 (rf/reg-event-fx
  ::initialize
- [(rf/inject-cofx :window-location)]
- (fn [{:keys [location db]} _]
+ [(rf/inject-cofx :storage/get [:auth])
+  (rf/inject-cofx :window-location)]
+ (fn [{{auth :auth} :storage location :storage db :db} _]
    (let [config (ui-config location)
          db     (merge db {:config config
                            :route-map/routes app.routes/routes
                            :xhr/config {:base-url (:base-url config)}})]
-     {:route-map/start {}
-      :db db})))
+     (if auth
+       {:db (assoc-in db [:xhr/config :token] (:token auth))
+        :route-map/start {}}
+       {:db db
+        :route-map/start {}
+        :redirect "#/login"}))))
 
 (defn not-found-page []
   [:div.container

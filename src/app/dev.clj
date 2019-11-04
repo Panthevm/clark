@@ -17,7 +17,8 @@
       (wrap-keyword-params)
       (wrap-params)
       (wrap-json-body {:keywords? true})
-      (auth/wrap)
+      (auth/authentication)
+      (auth/authorization)
       (wrap-json-response)
       (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :put :post :delete])))

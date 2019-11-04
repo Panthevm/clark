@@ -19,6 +19,7 @@
    (ring/router
     [(default group/table)
      (default schedule/table)
+     ["/info" {:get {:handler (fn [req] (auth/info req))}}]
      ["/registration" {:post {:handler (fn [req] (auth/registration req))}}]
      ["/login" {:post {:handler (fn [req] (auth/login req))}}]])
    (constantly {:status 404, :body "not found"})))

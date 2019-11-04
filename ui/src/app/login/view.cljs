@@ -1,9 +1,7 @@
 (ns app.login.view
   (:require [re-frame.core :as rf]
-            [zenform.core :as zf]
             [app.pages :as pages]
             [app.form.inputs :as inputs]
-            [app.styles :as styles]
             [app.login.form :as form]
             [app.login.model :as model]))
 

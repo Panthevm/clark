@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [app.login.form :as form]))
 
-(def login-page  ::login-page)
+(def login-page    ::login-page)
+(def registration  ::registration)
 
 (rf/reg-event-fx
  login-page
@@ -10,11 +11,20 @@
    (when (= :init phase)
      {:dispatch [::form/init]})))
 
+
 (rf/reg-sub
  login-page
- :<- [:pages/data login-page]
- (fn [page _]
-   page))
+ (fn [] {}))
+
+(rf/reg-event-fx
+ registration
+ (fn [_ [_ phase]]
+   (when (= :init phase)
+     {:dispatch [::form/init]})))
+
+(rf/reg-sub
+ registration
+ (fn [] {}))
 
 (rf/reg-event-fx
  ::submit
@@ -31,8 +41,20 @@
                  :body        form}}))
 
 (rf/reg-event-fx
+ ::submit-reg
+ (fn []
+   {:dispatch [::form/eval-form {:valid ::registration}]}))
+
+(rf/reg-event-fx
+ ::registration
+ (fn [_ [_ form]]
+   {:json/fetch {:uri         "/registration"
+                 :method      :post
+                 :credentials "same-origin"
+                 :body        form}}))
+
+(rf/reg-event-fx
  ::grant-access
- (fn [{db :db} [_ {resp :data}]]
-   (if (and (< (:status resp) 399) (get-in resp [:body :userinfo :id]))
-     {:cookies/set {:key :asid :value (get-in resp [:cookies :asid :value])}}
-     {:db (assoc-in db [login-page :error] "Неверно указана учетная запись или пароль.")})))
+ (fn [_ [_ {resp :data}]]
+   {:dispatch-n [[:cookies/set {:key :asid :value (get resp :token)}]
+                 [:redirect "#/groups"]]}))

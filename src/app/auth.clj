@@ -1,10 +1,13 @@
 (ns app.auth
-  (:require (buddy
-             [auth.backends.token :as token]
-             [auth.middleware     :as middleware]
-             [sign.jws            :as jws]
-             [auth                :as auth]
-             [hashers             :as hashers])
+  (:require [buddy.auth.backends.token :as token]
+            [buddy.auth.middleware     :as middleware]
+            [app.resources.user        :as user]
+            [cheshire.core             :as json]
+            [app.db                    :refer [db]]
+            [clj-pg.honey              :as pg]
+            [buddy.sign.jwt            :as jwt]
+            [buddy.auth                :as auth]
+            [buddy.hashers             :as hashers]
             [clojure.data.codec.base64 :as b64]))
 
 (defonce ^:private pkey
@@ -16,31 +19,26 @@
 
 (def auth-backend (token/jws-backend {:secret pkey :options {:alg :hs512}}))
 
-(defn wrap []
-  (middleware/wrap-authentication auth-backend))
+(defn wrap [req]
+  (middleware/wrap-authentication req auth-backend))
 
-(def users {"admin" {:username "admin"
-                     :hashed-password (hashers/encrypt "adminpass")
-                     :roles #{:user :admin}}
-            "user"  {:username "user"
-                     :hashed-password (hashers/encrypt "userpass")
-                     :roles #{:user}}})
+(defn login
+  [{{:keys [username password]} :body}]
+  (let [{user :resource} (pg/query-first (db)
+                                         {:select [:resource]
+                                          :from   [:user]
+                                          :where  ["@>" :resource
+                                                   (json/generate-string {:username username})]})]
+    (if (hashers/check password (get user :password))
+      {:status 200
+       :body   {:token (jwt/sign (dissoc user :password) pkey)}}
+      {:status 404
+       :body {}})))
 
-(defn lookup-user [username password]
-  (if-let [user (get users username)]
-    (when (hashers/check password (get user :hashed-password))
-      (dissoc user :hashed-password))))
-
-(defn do-login [{{username "username" password "password"} :params}]
-  (if-let [user (lookup-user username password)]
-    {:status 200
-     :headers {:content-type "application/json"}
-     :body {:token (jws/sign user pkey)}}
-    (prn "/login")))
-
-(defn auth? [req]
-  (auth/authenticated? req))
-
-(defn is-admin [{user :identity}]
-  (contains? (apply hash-set (:roles user)) :admin))
-
+(defn registration
+  [{{:keys [username password]} :body}]
+  (let [user (pg/create (db) user/table
+                        {:resource {:username username
+                                    :password (hashers/encrypt password)}})]
+    {:status 201
+     :body   {:token (jwt/sign (dissoc user :password) pkey)}}))

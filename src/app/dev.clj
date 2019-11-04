@@ -16,8 +16,8 @@
   (-> #'handler
       (wrap-keyword-params)
       (wrap-params)
-      (auth/wrap)
       (wrap-json-body {:keywords? true})
+      (auth/wrap)
       (wrap-json-response)
       (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :put :post :delete])))

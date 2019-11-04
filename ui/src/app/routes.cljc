@@ -1,6 +1,7 @@
 (ns app.routes)
 
 (def routes {:.         :app.groups.model/index
+             "registration" {:. :app.login.model/registration}
              "login"             {:. :app.login.model/login-page}
              "schedule" {:.    :app.schedule.model/index
                          "create" {:. :app.schedule.crud.model/create}

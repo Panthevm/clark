@@ -4,6 +4,7 @@
 
             [zframes.routing]
             [zframes.redirect]
+            [zframes.cookies]
             [zframes.xhr]
             [zframes.method]
             [zframes.debounce]

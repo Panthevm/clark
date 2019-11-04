@@ -14,7 +14,7 @@
 
 (pages/reg-subs-page
  model/login-page
- (fn [{:keys [user role error] :as page} type & [params]]
+ (fn []
    [:div.d-flex.justify-content-center
     [:div.segment.white
      [:h2.text-center "Авторизация"]
@@ -22,4 +22,18 @@
      [:div.btn-form.list-group
       [:button.btn {:on-click #(rf/dispatch [::model/submit])}
        "Войти"]
-      [:button.btn "Регистрация"]]]]))
+      [:button.btn {:on-click #(rf/dispatch [:redirect "#/registration"])}
+       "Регистрация"]]]]))
+
+(pages/reg-subs-page
+ model/registration
+ (fn []
+   [:div.d-flex.justify-content-center
+    [:div.segment.white
+     [:h2.text-center "Регистрация"]
+     [login-form]
+     [:div.btn-form.list-group
+      [:button.btn {:on-click #(rf/dispatch [::model/submit-reg])}
+       "Зарегистрироваться"]
+      [:button.btn {:on-click #(rf/dispatch [:redirect "#/login"])}
+       "Войти"]]]]))

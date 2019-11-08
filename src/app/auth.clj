@@ -16,7 +16,7 @@
   (String.
    (b64/encode
     (.getBytes
-     (apply str (take 5 (repeatedly #(str (rand)))))))
+     (clojure.string/join (repeatedly 5 (fn* [] (str (rand)))))))
    "UTF-8"))
 
 (def auth-backend (token/jws-backend {:secret pkey :options {:alg :hs512}}))

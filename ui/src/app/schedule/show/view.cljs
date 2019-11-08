@@ -12,7 +12,7 @@
   [:tr.line.d-flex.align-items-start
    [:td.sticky-col (h/short-name people)]
    (for [col idx-days] ^{:key col}
-     [:th [i/input form/path [:schedule col :assessment row]]])])
+     [:th [model/table-row [:schedule col :assessment row] people]])])
 
 (defn Table
   [{:keys [group idx-days] :as page}]

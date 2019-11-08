@@ -54,3 +54,13 @@
  ::select-column
  (fn [db [_ idx]]
    (assoc-in db [index-page :selected-colum] idx)))
+
+(defn table-row
+  [path & [student]]
+  (let [node      (rf/subscribe [:zf/node form/path path])
+        on-change #(rf/dispatch [:zf/set-value form/path path {:subject student
+                                                               :grade (.. % -target -value)}])]
+    (fn [& _]
+      (let [{:keys [value]} @node]
+        [:input.form-control.mb-4 {:on-change on-change
+                                   :value     (or (:grade value) "")}]))))

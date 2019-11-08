@@ -32,7 +32,7 @@
 
 (defn not-expr [[op l]]
   (fn [coll]
-    (filter #(not ((operand l) %)) coll)))
+    (remove (operand l) coll)))
 
 (defn contains-predicate [[_ l r]]
   #(contains? (set r) ((operand l) %)))

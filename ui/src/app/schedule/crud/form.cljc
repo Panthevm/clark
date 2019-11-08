@@ -9,13 +9,11 @@
   {:type   :form
    :fields {:id            {:type :string}
             :discipline    {:type :string}
-            :schedule       {:type :collection
-                             :item {:type :form
-                                    :fields {:date {:type :string
-                                                    :get h/date-get
-                                                    :post h/data-post}
-                                             :assessment {:type :collection
-                                                          :item {:type :string}}}}}
+            :schedule      {:type :collection
+                            :item {:type   :form
+                                   :fields {:date       {:type :string}
+                                            :assessment {:type :collection
+                                                         :item {:type :object}}}}}
             :group         {:type         :string
                             :display-path [:name]
                             :on-search    ::event/group}
@@ -30,5 +28,3 @@
  ::init
  (fn [_ [_ & [data]]]
    {:dispatch [:zf/init path schema data]}))
-
-

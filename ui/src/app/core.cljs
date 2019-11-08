@@ -12,6 +12,7 @@
             [zframes.window-location]
 
             [app.groups.view]
+            [app.students.view]
             [app.profile.view]
             [app.schedule.view]
             [app.schedule.show.view]

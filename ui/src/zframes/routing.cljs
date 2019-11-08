@@ -56,7 +56,7 @@
                                     op (dissoc o-params :. :params)
                                     np (dissoc n-params :. :params)]
                                 (cond
-                                  (or (nil? op) (not (= np op)))
+                                  (or (nil? op) (not= np op))
                                   (conj acc [k :init n-params])
 
                                   ;(and op (= (:.. np) route))     ;; Need to rethink this
@@ -73,8 +73,7 @@
      (fn [acc pair]
        (let [[k v] (str/split pair #"=" 2)]
          (assoc acc (keyword k) (js/decodeURIComponent v))))
-     {} (-> (str/replace s #"^\?" "")
-            (str/split "&")))))
+     {} (str/split (str/replace s #"^\?" "") "&"))))
 
 (defn dispatch-context [_]
   (let [query (.. js/window -location -search)]
@@ -87,12 +86,12 @@
          ctx-rs (:context/routes db)
          prev-h (get ctx-rs (:context old))]
 
-     (if (not (= old search))
+     (if-not (= old search)
        (do
-         (when prev-h {:dispatch [prev-h :deinit old]
-                       :db (dissoc db :navigation)})
+         (when prev-h
+           {:dispatch [prev-h :deinit old], :db (dissoc db :navigation)})
          (if-let [handler (get ctx-rs (:context search))]
-           {:dispatch [handler :init search]
+           {:dispatch [handler :init search],
             :db (assoc db :location/search search)}
            {:db (assoc db :location/search search)}))
        {:db (assoc db :location/search search)}))))

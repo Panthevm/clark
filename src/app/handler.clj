@@ -4,6 +4,7 @@
             [app.auth    :as auth]
             (app.resources
              [group    :as group]
+             [student  :as student]
              [schedule :as schedule])))
 
 (defn default [table]
@@ -18,6 +19,7 @@
   (ring/ring-handler
    (ring/router
     [(default group/table)
+     (default student/table)
      (default schedule/table)
      ["/info" {:get {:handler (fn [req] (auth/info req))}}]
      ["/registration" {:post {:handler (fn [req] (auth/registration req))}}]

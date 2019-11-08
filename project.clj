@@ -12,6 +12,7 @@
                  [org.clojure/data.codec    "0.1.1"]
                  [ring-cors                 "0.1.13"]]
   :main app.dev
+  :plugins [[lein-kibit "0.1.7"]]
   :uberjar-name "app.jar"
   :resource-paths ["resources"]
   :profiles {:dev     {:resource-paths ["src/resources"]}

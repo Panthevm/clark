@@ -8,11 +8,12 @@
             [app.pages               :as pages]))
 
 (defn Line
-  [people row {:keys [idx-days]}]
+  [student row {:keys [idx-days idx-rows]}]
   [:tr.line.d-flex.align-items-start
-   [:td.sticky-col (h/short-name people)]
+   [:td.sticky-col (h/short-name (:display student))]
    (for [col idx-days] ^{:key col}
-     [:th [model/table-row [:schedule col :assessment row] people]])])
+     [:th [i/merge-input form/path [:schedule col :assessment row :grade] {:subject student
+                                                                 :number row}]])])
 
 (defn Table
   [{:keys [group idx-days] :as page}]
@@ -27,8 +28,8 @@
          [i/input form/path [:schedule idx :date]]])]]
     [:tbody
      (map-indexed
-      (fn [idx people] ^{:key idx}
-        [Line people idx page])
+      (fn [idx-row student] ^{:key idx-row}
+        [Line student idx-row page])
       (:students group))]]])
 
 (pages/reg-subs-page

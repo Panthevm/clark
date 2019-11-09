@@ -9,7 +9,7 @@
   [idx]
   [:div.form-row.col-sm
    [:div.flex-grow-1
-    [i/input form/path [:students idx] {:placeholder "Фамилия Имя Отчество"}]]
+    [i/combobox form/path [:students idx] {:placeholder "Фамилия Имя Отчество"}]]
    [:div.mt-2.ml-2
     [:text.text-danger.point
      {:on-click #(rf/dispatch [:zf/remove-collection-item form/path [:students] idx])}
@@ -27,7 +27,7 @@
       [:label "Факультет"]
       [i/input form/path [:faculty]]]
      [:div.row>div.col-sm
-      [:label "Факультет"]
+      [:label "Кафедра"]
       [i/input form/path [:department]]]
      [:div.row>div.col-sm-3
       [:label "Курс"]

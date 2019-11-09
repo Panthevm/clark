@@ -1,7 +1,8 @@
 (ns app.groups.crud.form
   (:require [re-frame.core     :as rf]
             [zenform.model     :as zf]
-            [app.helpers       :as h]))
+            [app.helpers       :as h]
+            [app.form.events   :as events]))
 
 (def path [:form :group])
 (def schema
@@ -12,7 +13,8 @@
             :department    {:type :string}
             :course        {:type :integer}
             :students      {:type :collection
-                            :item {:type :string}}
+                            :item {:type      :object
+                                   :on-search ::events/student}}
             :resource_type {:type :string}}})
 
 (defn evaling [db cb]

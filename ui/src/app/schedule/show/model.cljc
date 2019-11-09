@@ -1,6 +1,7 @@
 (ns app.schedule.show.model
   (:require [re-frame.core          :as rf]
             [app.helpers            :as h]
+            [zenform.model          :as zenform]
             [app.schedule.crud.form :as form]))
 
 (def index-page ::show)
@@ -14,13 +15,31 @@
                            :req-id :shedule}}
      :deinit {:db (dissoc db pid)})))
 
+(rf/reg-event-db
+ ::success-group
+ (fn [db]
+   (update-in db (conj (zenform/get-full-path form/path [:schedule]) :value)
+              #(into {}
+                     (map
+                      (fn [[k-sch sch]]
+                        {k-sch (update-in sch (zenform/get-value-path [:assessment])
+                                          (fn [assesment]
+                                            (into {}
+                                                  (map
+                                                   (fn [[k v]]
+                                                     {(get-in v [:value  :number]) v})
+                                                   assesment))))})
+                      %)))))
+
+
 (rf/reg-event-fx
  ::success-get
- (fn [_ [_ {{data :resource} :data}]]
-   (let [id-group (get-in data [:group :id])]
+ (fn [_ [_ {{schedule :resource} :data}]]
+   (let [id-group (get-in schedule [:group :id])]
      {:method/get {:resource {:type :group :id id-group}
+                   :success {:event ::success-group}
                    :req-id   :group}
-      :dispatch [::form/init data]})))
+      :dispatch [::form/init schedule]})))
 
 (rf/reg-sub
  index-page
@@ -28,11 +47,11 @@
  :<- [:page/data index-page]
  :<- [:xhr/response :group]
  :<- [:xhr/response :shedule]
- (fn [[idx-days page group shedule]]
+ (fn [[idx-days page group schedule]]
    (merge page
-    {:idx-days idx-days
-     :shedule  (get-in shedule [:data :resource])
-     :group    (get-in group [:data :resource])})))
+          {:idx-days idx-days
+           :shedule  (get-in schedule [:data :resource])
+           :group    (get-in group   [:data :resource])})))
 
 (rf/reg-event-fx
  ::add-column
@@ -54,13 +73,3 @@
  ::select-column
  (fn [db [_ idx]]
    (assoc-in db [index-page :selected-colum] idx)))
-
-(defn table-row
-  [path & [student]]
-  (let [node      (rf/subscribe [:zf/node form/path path])
-        on-change #(rf/dispatch [:zf/set-value form/path path {:subject student
-                                                               :grade (.. % -target -value)}])]
-    (fn [& _]
-      (let [{:keys [value]} @node]
-        [:input.form-control.mb-4 {:on-change on-change
-                                   :value     (or (:grade value) "")}]))))

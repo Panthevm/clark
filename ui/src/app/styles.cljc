@@ -31,7 +31,7 @@
                     :width "140px"
                     :overflow-x "hidden"
                     :text-overflow "ellipsis"}]]
-    [:.table {:margin-bottom "0px"}
+    [:.table {:margin-bottom "22px"}
      [:.form-control {:padding "0"
                       :border-radius "0"
                       :min-width "60px"

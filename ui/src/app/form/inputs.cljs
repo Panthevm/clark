@@ -95,3 +95,15 @@
         [:div
          [:text "Загрузка"]
          [:input.form-control]]))))
+
+(defn merge-input
+  [form-path path & [meta]]
+  (let [value-path (last path)
+        path       (vec (drop-last path))
+        node       (rf/subscribe [:zf/node form-path path])
+        on-change  #(rf/dispatch [:zf/set-value form-path path
+                                  (assoc meta value-path (.. % -target -value))])]
+    (fn [& _]
+      (let [{:keys [value]} @node]
+        [:input.form-control.mb-4 {:on-change on-change
+                                   :value     (or (:grade value) "")}]))))

@@ -31,7 +31,6 @@
                                                    assesment))))})
                       %)))))
 
-
 (rf/reg-event-fx
  ::success-get
  (fn [_ [_ {{schedule :resource} :data}]]
@@ -50,8 +49,8 @@
  (fn [[idx-days page group schedule]]
    (merge page
           {:idx-days idx-days
-           :shedule  (get-in schedule [:data :resource])
-           :group    (get-in group   [:data :resource])})))
+           :shedule  (h/resource schedule)
+           :group    (h/resource group)})))
 
 (rf/reg-event-fx
  ::add-column

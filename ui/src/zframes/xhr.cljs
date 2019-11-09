@@ -21,101 +21,45 @@
                  (cond
                    (vector? v) (mapv (fn [vv] (str (name k) "=" vv)) v)
                    (set? v) [(str (name k) "=" (str/join "," v))]
-                   :else [(str (name k) "=" v) #_(sub-query-by-spaces k v)])))
+                   :else [(str (name k) "=" v)])))
        (str/join "&")))
 
 (defn base-url [db url]
   (str (get-in db [:config :base-url]) url))
 
-(defn make-form-data [files]
-  (let [form-data (js/FormData.)]
-    (doall
-     (for [[i file] (map-indexed vector files)]
-       (.append form-data (str "file" i) file (str "file" i))))
-    form-data))
-
-
-(defn *json-fetch [{:keys [uri format headers is-fetching-path params success error] :as opts}]
+(defn *json-fetch [{:keys [uri format headers params success error] :as opts}]
   (let [{token :token base-url :base-url}    (get-in @db/app-db [:xhr/config])
-        fmt (or (get {"json" "application/json" "yaml" "text/yaml"} format) "application/json")
-        headers (cond-> {"accept" fmt
-                         "authorization" (str "Bearer " token)}
-                  (or (nil? token) (str/blank? token)) (dissoc "authorization")
-                  (nil? (:files opts)) (assoc "Content-Type" "application/json")
-                  true (merge (or headers {})))
+        headers (merge (or headers {})
+                       {"Content-Type" "application/json"
+                        "authorization" (str "Bearer " token)})
         fetch-opts (-> (merge {:method "get" :mode "cors" :credentials "same-origin"} opts)
-                       (dissoc :uri :headers :success :error :params :files)
+                       (dissoc :uri :headers :success :error :params)
                        (assoc :headers headers))
         fetch-opts (cond-> fetch-opts
-                     (:body opts) (assoc :body (if (string? (:body opts)) (:body opts) (.stringify js/JSON (clj->js (:body opts)))))
-                     (:files opts) (assoc :body (make-form-data (:files opts))))
+                     (:body opts) (assoc :body (if (string? (:body opts))
+                                                 (:body opts)
+                                                 (.stringify js/JSON (clj->js (:body opts))))))
         url (str base-url uri)]
-
-    (when is-fetching-path (rf/dispatch [::fetch-start is-fetching-path]))
-
     (->
      (js/fetch (str url (when params (str "?" (to-query params)))) (clj->js fetch-opts))
      (.then
       (fn [resp]
-        (when is-fetching-path (rf/dispatch [::fetch-end is-fetching-path]))
-        (if (:dont-parse opts)
-          (.then (.text resp)
-                 (fn [doc]
-                   (let [e (if (< (.-status resp) 299) success error)]
-                     (rf/dispatch [(:event e) (merge e {:request opts, :data doc})])))
-                 ;; No json
-                 (fn [doc]
-                   (println "Error:" doc)
-                   (rf/dispatch
-                     [(:event success)
-                      (merge success
-                             {:request opts
-                              :data doc})])))
-          (.then (.json resp)
-                 (fn [doc]
-                   (let [data (js->clj doc :keywordize-keys true)]
-                     (->> [(when (:req-id opts)
-                            [:xhr/done
-                             {:request opts
-                              :data data
-                              :status (.-status resp)}])
-                          (when-let [e (if (< (.-status resp) 299) success error)]
-                            [(:event e)
-                             {:request opts
-                              :data data}
-                             (:params e)])
-                           (when (and (> (.-status resp) 299)
-                                      (not (false? (:flash error))))
-                            (let [errors  (->> data
-                                               :issue (map (fn [e] (str (:expression e) " - " (:diagnostics e)  ))))]
-                              [:flash/danger
-                               {:msg  [:div
-                                       [:div "Ошибка: " [:b (.-status resp)] " " (.-statusText resp)]
-                                       (if-let [msg (:message data)]
-                                         [:div msg]
-                                         (case (.-status resp)
-                                           404 [:div "Не верный адрес запроса"]
-                                           422 [:div "Не валидный запрос"]))
-                                       (when (and (not (empty? errors)) (= 422 (.-status resp)))
-                                         [:ul (for [e errors] ^{:key e} [:li e])])]}]))]
-                         (mapv #(when % (rf/dispatch %))))))
-                 ;; No json
-                 (fn [doc]
-                   (println "Error:" doc)
-                   (rf/dispatch
-                     [(:event success)
-                      (merge success
-                             {:request opts
-                              :data doc})]))))))
+        (.then (.json resp)
+               (fn [doc]
+                 (let [data (js->clj doc :keywordize-keys true)]
+                   (mapv
+                    #(when % (rf/dispatch %))
+                    [(when (:req-id opts)
+                       [:xhr/done {:request opts, :data data, :status (.-status resp)}])
+                     (when-let [e (if (< (.-status resp) 299) success error)]
+                       [(:event e) {:request opts, :data data} (:params e)])])))
+               (fn [doc]
+                 (rf/dispatch
+                  [(:event success)
+                   (merge success
+                          {:request opts
+                           :data doc})])))))
      (.catch (fn [err]
-               (.error js/console err)
-               (rf/dispatch
-                [:flash/danger
-                 {:msg  [:div
-                         [:div "Ошибка: " [:b (.-status err)] " " (.-statusText err)]
-                         (case (.-status err)
-                           404 [:div "Не верный адрес запроса"]
-                           422 [:div "Не валидный запрос"])]}])
                (rf/dispatch [(:event error)
                              (merge error {:request opts :error err})]))))))
 

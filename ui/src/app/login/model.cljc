@@ -36,7 +36,6 @@
  (fn [_ [_ form]]
    {:json/fetch {:uri         "/login"
                  :method      :post
-                 :credentials "same-origin"
                  :success     {:event :zframes.auth/signin-success}
                  :body        form}}))
 
@@ -50,5 +49,4 @@
  (fn [_ [_ form]]
    {:json/fetch {:uri         "/registration"
                  :method      :post
-                 :credentials "same-origin"
                  :body        form}}))

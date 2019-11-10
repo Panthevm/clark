@@ -1,15 +1,15 @@
 (ns app.profile.model
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [app.helpers   :as h]))
 
 (def index ::index)
 
 (rf/reg-event-fx
  index
- (fn [{db :db} [_ phase]]
-   {:json/fetch {:uri         "/info"
-                 :method      :get}}
-   ))
+ (fn []))
 
 (rf/reg-sub
  index
- (fn [] {}))
+ :<- [:xhr/response :user]
+ (fn [user]
+   {:user (h/resource user)}))

@@ -5,7 +5,7 @@
 
 (defn ok      [response] {:status 200 :body response})
 (defn created [responce] {:status 201 :body responce})
-(defn error   []         {:status 404 :body "error"})
+(defn error   []         {:status 404 :body {:error "error"}})
 
 (defn -exists? [table] (pg/table-exists? (db) table))
 (defn -create  [table] (pg/create-table  (db) table))

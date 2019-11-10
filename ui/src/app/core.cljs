@@ -40,7 +40,8 @@
                            :xhr/config {:base-url (:base-url config)}})]
      (if auth
        {:db (assoc-in db [:xhr/config :token] (:token auth))
-        :route-map/start {}}
+        :route-map/start {}
+        :dispatch [:zframes.auth/userinfo]}
        {:db db
         :route-map/start {}
         :redirect "#/login"}))))

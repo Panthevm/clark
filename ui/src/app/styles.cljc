@@ -16,6 +16,12 @@
            :font-size "15px"
            :font-family "GothamPro"
            :height "100%"}
+    [:.faicon {:font-size "30px"}]
+    [:.user-badge {:display "flex"
+                   :text-align "center"
+                   :text-decoration "none"}
+     [:.username {:margin-right ".5rem"
+                  :margin-top   ".25rem"}]]
     [:.sticky-table {:overflow-x "scroll"
                      :overflow-y "visible"}
      [:th {:border-top "none"}]
@@ -71,7 +77,6 @@
               :align-items "center"
               :margin-left "1px"
               :border-radius ".25em 0 0 .25em"
-
               :display "flex"}]
      [:.search {:border-radius ".25em .25em 0 0"}]
      [:.list-group-item:first-child
@@ -88,6 +93,5 @@
                      :border-radius "25px"}]
     [:.segment {:padding "25px"
                 :height "max-content"
-                :min-width "500px"
                 :border-radius "25px"}
      [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]]]))

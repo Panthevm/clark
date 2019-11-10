@@ -6,6 +6,9 @@
 (defn href [& parts]
   (str "#/" (str/join "/" parts)))
 
+(defn remove-after [s end]
+  (first (str/split s #"@")))
+
 (defn short-name [name]
   (let [v (str/split name #" ")]
     (str/join ". " [(first (v 1)) (first (v 2)) (v 0)])))

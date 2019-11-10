@@ -3,7 +3,7 @@
             [reagent.core   :as    r]
             [app.styles     :refer [app-styles]]
             [clojure.string :refer [includes?]]
-            [app.helpers    :refer [href]]))
+            [app.helpers    :as    h]))
 
 (defn current-nav [fragment navs]
   (map
@@ -17,28 +17,32 @@
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment]
-   (cond->> [{:href (href "schedule") :title "Журналы"}
-             {:href (href "groups")   :title "Группы"}
-             {:href (href "students")   :title "Студенты"}]
+   (cond->> [{:href (h/href "schedule") :title "Журналы"}
+             {:href (h/href "groups")   :title "Группы"}
+             {:href (h/href "students")   :title "Студенты"}]
      fragment (current-nav fragment))))
 
-(defn navbar []
-  (let [navs (subscribe [::navigation])
+(defn navbar [user]
+  (let [navs   @(subscribe [::navigation])
+        user   (h/resource user)
         expand (r/atom false)]
-    (fn []
-      [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
-       [:div.container
-        [:button.navbar-toggler {:on-click #(swap! expand not)}
-         [:i.far.fa-bars]]
-        [:div.navbar-collapse (when @expand {:class "collapse"})
-         [:div.navbar-nav
-          (map-indexed
-           (fn [idx link] ^{:key idx}
-             [:a.nav-item.nav-link link
-              (:title link)])
-           @navs)]]]])))
+    [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
+     [:div.container
+      [:button.navbar-toggler {:on-click #(swap! expand not)}
+       [:i.far.fa-bars]]
+      [:div.navbar-collapse (when @expand {:class "collapse"})
+       [:div.navbar-nav.mr-auto
+        (map-indexed
+         (fn [idx link] ^{:key idx}
+           [:a.nav-item.nav-link link
+            (:title link)])
+         navs)]
+       [:a.user-badge {:href "#/profile"}
+        [:span.username (h/remove-after (:username user) "@")]
+        [:i.far.fa-user-circle.faicon]]]]]))
 
 (defn layout [cnt]
-  [:div.app app-styles
-   [navbar]
-   [:div.content-body cnt]])
+  (let [user @(subscribe [:xhr/response :user])]
+    [:div.app app-styles
+     (when user [navbar user])
+     [:div.content-body cnt]]))

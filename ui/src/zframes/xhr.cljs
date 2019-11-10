@@ -52,13 +52,7 @@
                     [(when (:req-id opts)
                        [:xhr/done {:request opts, :data data, :status (.-status resp)}])
                      (when-let [e (if (< (.-status resp) 299) success error)]
-                       [(:event e) {:request opts, :data data} (:params e)])])))
-               (fn [doc]
-                 (rf/dispatch
-                  [(:event success)
-                   (merge success
-                          {:request opts
-                           :data doc})])))))
+                       [(:event e) {:request opts, :data data} (:params e)])]))))))
      (.catch (fn [err]
                (rf/dispatch [(:event error)
                              (merge error {:request opts :error err})]))))))

@@ -46,13 +46,12 @@
   [{{:keys [username password]} :body}]
   (let [insert (pg/create (db) user/table
                           {:resource {:username username :password (hashers/encrypt password)}})
-        user (:resource (a/make-resource insert user/table))
-        ss (prn user)]
+        user (:resource (a/make-resource insert user/table))]
     (a/created
      {:token (jwt/sign (dissoc user :password) pkey)})))
 
 (defn info
   [{{auth "authorization"} :headers}]
   (let [token (last (str/split auth #" "))
-        info (jwt/unsign token pkey)]
+        info {:resource (jwt/unsign token pkey)}]
     (a/ok info)))

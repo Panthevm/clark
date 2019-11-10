@@ -3,7 +3,9 @@
             [app.schedule.model         :as model]
             [app.helpers              :refer [href]]
             [app.pages                :as pages]
-            [app.schedule.crud.view]))
+
+            [app.schedule.crud.view]
+            [app.schedule.report.view]))
 
 (defn Item [{{id :id {name :name} :group} :resource}]
   [:a.list-group-item.list-group-item-action

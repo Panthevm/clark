@@ -13,7 +13,7 @@
    [:td.sticky-col (h/short-name (:display student))]
    (for [col idx-days] ^{:key col}
      [:th [i/merge-input form/path [:schedule col :assessment row :grade] {:subject student
-                                                                 :number row}]])])
+                                                                           :number row}]])])
 
 (defn Table
   [{:keys [group idx-days] :as page}]
@@ -37,15 +37,18 @@
  (fn [{:keys [group selected-colum] :as page} {id :id}]
    [:div.container.segment.shadow.white
     [:div.d-flex.justify-content-between
-     [:h2 "Журнал группы " (:name group)]
+     [:div.d-flex
+      [:h2 "Журнал группы " (:name group)]
+      [:div.mt-1
+       [:i.far.fa-edit.point.ml-2.text-info
+        {:on-click #(rf/dispatch [:redirect (h/href "schedule" id)])}]
+       [:i.far.fa-file-alt.point.ml-2.text-warning
+        {:on-click #(rf/dispatch [:redirect (h/href "schedule" id "report")])}]]]
      [:div.i-list
-      [:i.far.fa-edit.point
-       {:on-click #(rf/dispatch [:redirect (h/href "schedule" id)])}]
-      [:i.far.fa-plus.point
+      [:i.far.fa-plus.point.text-success
        {:on-click #(rf/dispatch [::model/add-column])}]
-      (when selected-colum
-        [:i.far.fa-times.point
-         {:on-click #(rf/dispatch [::model/remove-column selected-colum])}])]]
+      [:i.far.fa-times.point.text-danger
+       {:on-click #(rf/dispatch [::model/remove-column selected-colum])}]]]
     [Table page]
     [:div.btn-form
      [:button.btn

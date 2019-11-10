@@ -17,6 +17,7 @@
            :font-family "GothamPro"
            :height "100%"}
     [:.faicon {:font-size "30px"}]
+    [:.list-group-item {:cursor "pointer"}]
     [:.user-badge {:display "flex"
                    :text-align "center"
                    :text-decoration "none"}
@@ -66,6 +67,15 @@
                    :padding-right "4px"}]
     [:a :button:focus {:outline "none"}]
     [:.white {:background-color "#ffffff"}]
+    [:.sidebar
+     [:i {:width "25px"
+          :color "#6c757d"}]
+     [:span {:cursor "pointer"
+             :display "block"}]
+     [:b {:display "flex"
+          :margin-bottom "7px"
+          :border-bottom "1px solid #dee2e6"
+          :color "#6c757d"}]]
     [:.content-body {:margin-top "40px"}]
     [:.form-row {:padding "5px"}]
     [:.combobox {:position "relative"}
@@ -92,6 +102,8 @@
                      :margin-top "26px"
                      :border-radius "25px"}]
     [:.segment {:padding "25px"
+                :background-color "#ffffff"
+                :box-shadow "0 .5rem 1rem rgba(0,0,0,.15)"
                 :height "max-content"
                 :border-radius "25px"}
      [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]]]))

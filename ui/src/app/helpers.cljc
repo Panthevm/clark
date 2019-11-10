@@ -6,6 +6,11 @@
 (defn href [& parts]
   (str "#/" (str/join "/" parts)))
 
+(defn resource [data]
+  (get-in data [:data :resource]))
+
+                                        ;Text
+
 (defn remove-after [s end]
   (first (str/split s #"@")))
 
@@ -13,9 +18,8 @@
   (let [v (str/split name #" ")]
     (str/join ". " [(first (v 1)) (first (v 2)) (v 0)])))
 
-(defn resource [data]
-  (get-in data [:data :resource]))
                                         ;Date
+
 (def iso-fmt [:year "-" :month "-" :day "T" :hour ":" :min ":" :sec])
 
 (def date-format

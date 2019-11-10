@@ -36,8 +36,7 @@
 
 (defn login
   [{{:keys [username password]} :body}]
-  (let [user (:resource (-get username))
-        ss (prn user)]
+  (let [user (:resource (-get username))]
     (if (hashers/check password (:password user))
       (a/ok {:token (jwt/sign (dissoc user :password) pkey)})
       (a/error))))

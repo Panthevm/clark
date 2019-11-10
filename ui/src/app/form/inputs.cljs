@@ -92,9 +92,7 @@
     (fn [& _]
       (if @node
         [*combobox form-path path attrs]
-        [:div
-         [:text "Загрузка"]
-         [:input.form-control]]))))
+        [:input.form-control]))))
 
 (defn merge-input
   [form-path path & [meta]]

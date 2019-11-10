@@ -9,9 +9,11 @@
 
 (def student-path [:form :student])
 (def student-schema
-  {:type :form
-   :fields {:student {:type :object
+  {:type   :form
+   :fields {:student {:type      :object
+                      :on-click  ::event/student
                       :on-search ::event/student}}})
+
 (rf/reg-event-fx
  index-page
  (fn [{db :db} [pid phase {id :id}]]

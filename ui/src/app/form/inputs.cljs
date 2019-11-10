@@ -44,7 +44,9 @@
         on-change      #(debounce/debounce [(:on-search @node) {:q % :path path :form-path form-path}])
         on-click       (fn [value]
                          (rf/dispatch [:zf/set-value form-path path value])
-                         (rf/dispatch [:zf/dropdown  form-path path false]))
+                         (rf/dispatch [:zf/dropdown  form-path path false])
+                         (when-let [click (:on-click @node)]
+                           (rf/dispatch [click value])))
         close-dropdown (fn []
                          (rf/dispatch [:zf/dropdown form-path path false])
                          (rf/dispatch [:zf/items    form-path path (:default-items @node)]))

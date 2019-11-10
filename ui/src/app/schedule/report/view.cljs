@@ -8,8 +8,7 @@
 (defn group-page
   []
   [:div
-   [:h2 "Группа"]
-   ])
+   [:h2 "Группа"]])
 
 (defn student-page
   []

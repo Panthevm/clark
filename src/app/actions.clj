@@ -34,10 +34,10 @@
                                             :id (:id insert))))]
     (created response)))
 
-(defn -select [table {{id :id} :path-params :as ss}]
+(defn -select [table {{id :id} :path-params}]
   (let [response (pg/query-first (db) {:select [:resource]
-                                       :from [(:table table)]
-                                       :where [:= :id id]})]
+                                       :from   [(:table table)]
+                                       :where  [:= :id id]})]
     (ok response)))
 
 (defn -put

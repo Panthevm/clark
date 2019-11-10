@@ -2,6 +2,7 @@
   (:require [reitit.ring :as ring]
             [app.actions :as a]
             [app.auth    :as auth]
+            [app.actions.report :as report]
             (app.resources
              [group    :as group]
              [student  :as student]
@@ -21,7 +22,11 @@
     [(default group/table)
      (default student/table)
      (default schedule/table)
+
      ["/info" {:get {:handler (fn [req] (auth/info req))}}]
      ["/registration" {:post {:handler (fn [req] (auth/registration req))}}]
-     ["/login" {:post {:handler (fn [req] (auth/login req))}}]])
+     ["/login" {:post {:handler (fn [req] (auth/login req))}}]
+
+     ["/report" {:get {:handler (fn [req] (report/-get req))}}]
+     ])
    (constantly {:status 404, :body "not found"})))

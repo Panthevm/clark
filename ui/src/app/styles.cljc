@@ -105,5 +105,5 @@
                 :background-color "#ffffff"
                 :box-shadow "0 .5rem 1rem rgba(0,0,0,.15)"
                 :height "max-content"
-                :border-radius "25px"}
+                :border-radius "15px"}
      [:h2 {:font-size "25px" :font-family "GothamPro-medium"}]]]))

@@ -1,6 +1,7 @@
 (ns app.routes)
 
-(def routes {"registration" {:. :app.login.model/reg-page}
+(def routes {:. :app.profile.model/index
+             "registration" {:. :app.login.model/reg-page}
              "login"        {:. :app.login.model/login-page}
              "profile"      {:. :app.profile.model/index}
              "schedule"     {:.       :app.schedule.model/index
@@ -13,5 +14,4 @@
                              [:id]    {:. :app.groups.crud.model/show}}
              "students"     {:.       :app.students.model/index
                              "create" {:. :app.students.crud.model/create}
-                             [:id]    {:. :app.students.crud.model/show}}
-             })
+                             [:id]    {:. :app.students.crud.model/show}}})

@@ -20,9 +20,9 @@
 (rf/reg-event-fx
  :method/delete
  (fn [_ [_ {{:keys [type id] :as resource} :resource success :success :as req}]]
-   {:xhr/fetch {:uri (str "/" (name type) "/" id)
-                 :method "DELETE"
-                 :success success}}))
+   {:xhr/fetch {:uri     (str "/" (name type) "/" id)
+                :method  "DELETE"
+                :success success}}))
 
 (rf/reg-event-fx
  :method/update

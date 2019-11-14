@@ -31,7 +31,7 @@
   (let [node      (rf/subscribe [:zf/node form-path path])
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
-      (let [{:keys [validators value errors type]} @node]
+      (let [{:keys [value type]} @node]
         [:input.form-control {:id                (name (first path))
                               :class             (:class attrs)
                               :type              (field-type type)

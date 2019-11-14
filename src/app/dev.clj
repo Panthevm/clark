@@ -1,6 +1,5 @@
 (ns app.dev
   (:require [immutant.web             :as web]
-            [app.migration            :as migration]
             [app.handler              :refer [handler]]
             [environ.core             :refer (env)]
             [app.migration            :refer [migration]]

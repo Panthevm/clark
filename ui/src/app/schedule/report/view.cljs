@@ -11,15 +11,20 @@
    [:h2 "Группа"]])
 
 (defn student-page
-  []
+  [[{:keys [avg subject] :as report}]]
   [:div
    [:h2 "Отчет о студенте"]
    [i/combobox model/student-path [:student] {:placeholder "Студент"}]
-   [:i.far.fa-print.text-warning.point {:title "Скачать документ"}]])
+   [:i.far.fa-print.text-warning.point {:title "Скачать документ"}]
+   (when report
+     [:div
+      [:div [:text.text-muted "ФИО: "] (:display subject)]
+      [:div [:text.text-muted "Средняя оценка: "] avg]]
+     )])
 
 (pages/reg-subs-page
  model/index-page
- (fn [{:keys [group menu current-page]} {id :id}]
+ (fn [{:keys [report menu current-page]} {id :id}]
    [:div.container
     [:div.row
      [:div.col-sm-3.segment.sidebar
@@ -34,4 +39,4 @@
      [:div.col-sm.segment.ml-md-3.mt-3.mt-md-0.form
       (case current-page
         "Группа" [group-page]
-        [student-page])]]]))
+        [student-page report])]]]))

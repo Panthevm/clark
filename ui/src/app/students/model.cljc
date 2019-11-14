@@ -1,18 +1,19 @@
 (ns app.students.model
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [app.helpers   :as h]))
 
 (def index-page ::index)
 
 (rf/reg-event-fx
  index-page
- (fn [{db :db} [pid phase]]
+ (fn [_ [_ phase]]
    (case phase
-     :init   {:method/get {:resource {:type :student}
-                           :req-id :student}}
-     :deinit {:db (dissoc db pid)})))
+     :init {:method/get {:resource {:type :student}
+                         :req-id   :student}}
+     nil)))
 
 (rf/reg-sub
  index-page
  :<- [:xhr/response :student]
- (fn [{student :data} _]
-   {:items student}))
+ (fn [student]
+   {:items (:data student)}))

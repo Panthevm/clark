@@ -1,9 +1,7 @@
 (ns app.schedule.report.model
   (:require [re-frame.core          :as rf]
             [app.helpers            :as h]
-            [zenform.model          :as zenform]
-            [app.form.events        :as event]
-            [app.schedule.crud.form :as form]))
+            [app.form.events        :as event]))
 
 (def index-page ::report)
 
@@ -11,18 +9,27 @@
 (def student-schema
   {:type   :form
    :fields {:student {:type      :object
-                      :on-click  ::event/student
+                      :on-click  ::students-report
                       :on-search ::event/student}}})
 
 (rf/reg-event-fx
+ ::students-report
+ (fn [{db :db} [_ & [{id :id}]]]
+   (let [schedule-id (get-in db [:fragment-params :id])]
+     {:xhr/fetch {:uri    "/report"
+                  :params {:subject  id
+                           :schedule schedule-id}
+                  :req-id :report}})))
+
+(rf/reg-event-fx
  index-page
- (fn [{db :db} [pid phase {id :id}]]
+ (fn [_ [pid phase {id :id}]]
    (case phase
      :init   {:method/get {:resource {:type :schedule :id id}
                            :success  {:event ::success-get}
                            :req-id   :shedule}
-              :dispatch [::init]}
-     :deinit {:db (dissoc db pid)})))
+              :dispatch   [::init]}
+     :deinit {:dispatch [::h/clear-db [[pid] [:xhr :req :report]]]})))
 
 (rf/reg-event-fx
  ::init
@@ -53,11 +60,13 @@
  :<- [:page/data index-page]
  :<- [:xhr/response :shedule]
  :<- [:xhr/response :group]
- (fn [[page schedule group]]
+ :<- [:xhr/response :report]
+ (fn [[page schedule group report]]
    (merge page
           {:menu    (menu (:current-page page))
            :shedule (h/resource schedule)
-           :group   (h/resource group)})))
+           :group   (h/resource group)
+           :report  (map :resource (h/entry report))})))
 
 (rf/reg-event-db
  ::change-page

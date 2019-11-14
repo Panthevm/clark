@@ -27,7 +27,7 @@
 
 (rf/reg-event-fx
  ::student
- (fn [_ [__prefix__ & [{:keys [q path form-path]}]]]
+ (fn [_ [_ & [{:keys [q path form-path]}]]]
    {:xhr/fetch {:uri     "/student"
                 :params  {:ilike q}
                 :success {:event  ::student-loaded

@@ -5,11 +5,11 @@
 
 (rf/reg-event-fx
  index-page
- (fn [{db :db} [pid phase]]
+ (fn [_ [_ phase]]
    (case phase
      :init   {:method/get {:resource {:type :group}
                            :req-id :group}}
-     :deinit {:db (dissoc db pid)})))
+     nil)))
 
 (rf/reg-sub
  index-page

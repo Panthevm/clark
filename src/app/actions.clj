@@ -3,7 +3,9 @@
             [honeysql.core :as hsql]
             [clj-pg.honey :as pg]))
 
-(defn ok      [response] {:status 200 :body response})
+(defn ok      [response] {:Content-Disposition "attachment"
+                          :status 200 :body response})
+(defn entry   [response] {:entry response})
 (defn created [responce] {:status 201 :body responce})
 (defn error   []         {:status 404 :body {:error "error"}})
 

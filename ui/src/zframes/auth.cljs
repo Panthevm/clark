@@ -20,7 +20,7 @@
 
 (rf/reg-event-fx
  ::userinfo
- (fn [{db :db}]
+ (fn []
    {:json/fetch {:uri    "/info"
                  :method :get
                  :req-id :user}}))

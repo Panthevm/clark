@@ -27,6 +27,8 @@
      ["/registration" {:post {:handler (fn [req] (auth/registration req))}}]
      ["/login" {:post {:handler (fn [req] (auth/login req))}}]
 
-     ["/report" {:get {:handler (fn [req] (report/-get req))}}]
+     ["/report"
+      ["" {:get {:handler (fn [req] (report/-get req))}}]
+      ["/doc" {:get {:handler (fn [req] (report/-docx req))}}]]
      ])
    (constantly {:status 404, :body "not found"})))

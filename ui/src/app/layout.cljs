@@ -23,23 +23,24 @@
      fragment (current-nav fragment))))
 
 (defn navbar [user]
-  (let [navs   @(subscribe [::navigation])
+  (let [navs   (subscribe [::navigation])
         user   (h/resource user)
         expand (r/atom false)]
-    [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
-     [:div.container
-      [:button.navbar-toggler {:on-click #(swap! expand not)}
-       [:i.far.fa-bars]]
-      [:div.navbar-collapse (when @expand {:class "collapse"})
-       [:div.navbar-nav.mr-auto
-        (map-indexed
-         (fn [idx link] ^{:key idx}
-           [:a.nav-item.nav-link link
-            (:title link)])
-         navs)]
-       [:a.user-badge {:href "#/profile"}
-        [:span.username (h/remove-after (:username user) "@")]
-        [:i.far.fa-user-circle.faicon]]]]]))
+    (fn []
+      [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
+       [:div.container
+        [:button.navbar-toggler {:on-click #(swap! expand not)}
+         [:i.far.fa-bars]]
+        [:div.navbar-collapse (when @expand {:class "collapse"})
+         [:div.navbar-nav.mr-auto
+          (map-indexed
+           (fn [idx link] ^{:key idx}
+             [:a.nav-item.nav-link link
+              (:title link)])
+           @navs)]
+         [:a.user-badge {:href "#/profile"}
+          [:span.username (h/remove-after (:username user) "@")]
+          [:i.far.fa-user-circle.faicon]]]]])))
 
 (defn layout [cnt]
   (let [user @(subscribe [:xhr/response :user])]

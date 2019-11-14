@@ -2,7 +2,6 @@
   (:require [re-frame.core           :as rf]
             [app.form.inputs         :as i]
             [app.schedule.report.model :as model]
-            [app.helpers             :as h]
             [app.pages               :as pages]))
 
 (defn group-page
@@ -11,16 +10,20 @@
    [:h2 "Группа"]])
 
 (defn student-page
-  [[{:keys [avg subject] :as report}]]
+  [[{:keys [discipline avg miss subject] :as report}]]
   [:div
    [:h2 "Отчет о студенте"]
    [i/combobox model/student-path [:student] {:placeholder "Студент"}]
-   [:i.far.fa-print.text-warning.point {:title "Скачать документ"}]
+   [:a.btn
+    {:download "studentreport"
+     :on-click #(rf/dispatch [::model/get-docx report])}
+    [:i.far.fa-print.text-warning.point {:title "Скачать документ"}]]
    (when report
      [:div
       [:div [:text.text-muted "ФИО: "] (:display subject)]
-      [:div [:text.text-muted "Средняя оценка: "] avg]]
-     )])
+      [:div [:text.text-muted "Средняя оценка: "] avg]
+      [:div [:text.text-muted "Предмет: "] discipline]
+      [:div [:text.text-muted "Пропусков: "] miss]])])
 
 (pages/reg-subs-page
  model/index-page

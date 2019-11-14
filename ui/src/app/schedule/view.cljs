@@ -7,10 +7,10 @@
             [app.schedule.crud.view]
             [app.schedule.report.view]))
 
-(defn Item [{{id :id {name :name} :group} :resource}]
+(defn Item [{{id :id {name :name} :group discipline :discipline} :resource}]
   [:a.list-group-item.list-group-item-action
    {:on-click #(rf/dispatch [:redirect (href "schedule" id "show")])}
-   [:span name]])
+   [:span [:b.pr-2 discipline]  name]])
 
 (pages/reg-subs-page
  model/index-page

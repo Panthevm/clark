@@ -50,7 +50,7 @@
 
 (rf/reg-event-fx
  ::update
- (fn [{db :db} [_ id]]
+ (fn [{db :db}]
    (form/evaling db
                  (fn [value]
                    {:method/update {:resource value

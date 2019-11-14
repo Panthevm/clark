@@ -8,7 +8,6 @@
             [app.db                    :refer [db]]
             [clj-pg.honey              :as pg]
             [buddy.sign.jwt            :as jwt]
-            [buddy.sign.jws            :as jws]
             [buddy.hashers             :as hashers]
             [clojure.data.codec.base64 :as b64]))
 

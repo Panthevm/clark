@@ -8,7 +8,7 @@
 (defn login-form []
   [:form.form
    [inputs/input form/form-path [:username]]
-   [inputs/input form/form-path [:password]]])
+   [inputs/input form/form-path [:password] {:type "password"}]])
 
 (pages/reg-subs-page
  model/login-page

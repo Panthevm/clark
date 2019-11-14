@@ -32,16 +32,18 @@
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
       (let [{:keys [value type]} @node]
-        [:input.form-control {:id                (name (first path))
-                              :class             (:class attrs)
-                              :type              (field-type type)
-                              :on-change         on-change
-                              :value             (or value "")}]))))
+        [:div.input
+         [:input.form-control {:id                (name (first path))
+                               :class             (:class attrs)
+                               :key                (name (first path))
+                               :type              (:type attrs)
+                               :on-change         on-change
+                               :value             (or value "")}]]))))
 (defn *combobox
   [form-path path & [{:keys [placeholder]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
         init-data      (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
-        on-change      #(debounce/debounce [(:on-search @node) {:q % :path path :form-path form-path}])
+        on-change      #(rf/dispatch [(:on-search @node) {:q % :path path :form-path form-path}])
         on-click       (fn [value]
                          (rf/dispatch [:zf/set-value form-path path value])
                          (rf/dispatch [:zf/dropdown  form-path path false])

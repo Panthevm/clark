@@ -22,6 +22,18 @@
                   :req-id :report}})))
 
 (rf/reg-event-fx
+ ::get-docx
+ (fn [_ [_ report]]
+   {:xhr/fetch {:uri    "/report/doc"
+                :params {:avg        (:avg report)
+                         :miss       (:miss report)
+                         :discipline (:discipline report)
+                         :proffessor (get-in report [:proffessor :username])
+                         :student    (get-in report [:subject :display])
+                         :group      (get-in report [:group :name])}
+                :req-id :report}}))
+
+(rf/reg-event-fx
  index-page
  (fn [_ [pid phase {id :id}]]
    (case phase

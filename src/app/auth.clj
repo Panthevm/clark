@@ -49,7 +49,7 @@
      {:token (jwt/sign (dissoc user :password) pkey)})))
 
 (defn info
-  [{{auth "authorization"} :headers}]
+  [{{auth "Authorization"} :headers}]
   (let [token (last (str/split auth #" "))
         info {:resource (jwt/unsign token pkey)}]
     (a/ok info)))

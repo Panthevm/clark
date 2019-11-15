@@ -5,6 +5,7 @@
             [app.pages                :as pages]
 
             [app.schedule.crud.view]
+            [app.schedule.show.view]
             [app.schedule.report.view]))
 
 (defn Item [{{id :id {name :name} :group discipline :discipline} :resource}]

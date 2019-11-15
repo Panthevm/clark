@@ -59,8 +59,8 @@
 (rf/reg-event-fx
  ::delete
  (fn [{db :db} [_ id]]
-   {:method/delete {:resource {:type :schedule :id id}
-                    :success  {:event ::main-redirect}}}))
+   {:method/delete {:resource {:type :schedule :id id}}
+    :redirect "#/schedule"}))
 
 (rf/reg-event-fx
  ::main-redirect

@@ -19,7 +19,7 @@
  (fn [fragment]
    (cond->> [{:href (h/href "schedule") :title "Журналы"}
              {:href (h/href "groups")   :title "Группы"}
-             {:href (h/href "students")   :title "Студенты"}]
+             {:href (h/href "students") :title "Студенты"}]
      fragment (current-nav fragment))))
 
 (defn navbar [user]
@@ -42,8 +42,9 @@
           [:span.username (h/remove-after (:username user) "@")]
           [:i.far.fa-user-circle.faicon]]]]])))
 
-(defn layout [cnt]
-  (let [user @(subscribe [:xhr/response :user])]
-    [:div.app app-styles
-     (when user [navbar user])
-     [:div.content-body cnt]]))
+(defn layout []
+  (let [user (subscribe [:xhr/response :user])]
+    (fn [context]
+      [:div.app app-styles
+       (when user [navbar @user])
+       [:div.content-body context]])))

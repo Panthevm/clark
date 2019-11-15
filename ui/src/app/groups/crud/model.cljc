@@ -60,8 +60,8 @@
 (rf/reg-event-fx
  ::delete
  (fn [{db :db} [_ id]]
-   {:method/delete {:resource {:type :group :id id}
-                    :success  {:event ::main-redirect}}}))
+   {:method/delete {:resource {:type :group :id id}}
+    :redirect "#/groups"}))
 
 (rf/reg-event-fx
  ::main-redirect (fn [_] {:redirect "#/groups"}))

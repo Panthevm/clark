@@ -56,8 +56,8 @@
 (rf/reg-event-fx
  ::delete
  (fn [{db :db} [_ id]]
-   {:method/delete {:resource {:type :student :id id}
-                    :success  {:event ::main-redirect}}}))
+   {:method/delete {:resource {:type :student :id id}}
+    :redirect "#/students"}))
 
 (rf/reg-event-fx
  ::main-redirect (fn [_] {:redirect "#/students"}))

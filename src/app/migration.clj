@@ -10,11 +10,10 @@
   (when-not (a/-exists? (:table table)) (a/-create table)))
 
 (defn migration []
-  (do
-    (migrate schedule/table)
-    (migrate student/table)
-    (migrate user/table)
-    (migrate group/table)))
+  (migrate schedule/table)
+  (migrate student/table)
+  (migrate user/table)
+  (migrate group/table))
 
 (comment
   (a/-drop user/table)

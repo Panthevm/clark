@@ -50,4 +50,4 @@
 (defn -delete
   [table {{id :id} :path-params}]
   (let [response (pg/delete (db) table id)]
-    (ok (:id response))))
+    (ok {:id (:id response)})))

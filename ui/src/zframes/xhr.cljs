@@ -12,22 +12,12 @@
 
 (defn to-query [params]
   (->> params
-       (reduce-kv (fn [acc k v]
-                    (if (or (nil? v) (str/blank? v))
-                      acc
-                      (assoc acc k v)))
-                  {})
-       (mapcat (fn [[k v]]
-                 (cond
-                   (vector? v) (mapv (fn [vv] (str (name k) "=" vv)) v)
-                   (set? v) [(str (name k) "=" (str/join "," v))]
-                   :else [(str (name k) "=" v)])))
+       (mapv (fn [[k v]] (str (name k) "=" v)))
        (str/join "&")))
 
-(defn base-url [db url]
-  (str (get-in db [:config :base-url]) url))
 
-(defn *json-fetch [{:keys [uri format headers params success error] :as opts}]
+
+(defn *json-fetch [{:keys [uri headers params success error] :as opts}]
   (let [{token :token base-url :base-url}    (get-in @db/app-db [:xhr/config])
         headers (merge (or headers {})
                        {"Content-Type" "application/json"
@@ -36,9 +26,7 @@
                        (dissoc :uri :headers :success :error :params)
                        (assoc :headers headers))
         fetch-opts (cond-> fetch-opts
-                     (:body opts) (assoc :body (if (string? (:body opts))
-                                                 (:body opts)
-                                                 (.stringify js/JSON (clj->js (:body opts))))))
+                     (:body opts) (assoc :body (.stringify js/JSON (clj->js (:body opts)))))
         url (str base-url uri)]
     (->
      (js/fetch (str url (when params (str "?" (to-query params)))) (clj->js fetch-opts))
@@ -52,10 +40,7 @@
                     [(when (:req-id opts)
                        [:xhr/done {:request opts, :data data, :status (.-status resp)}])
                      (when-let [e (if (< (.-status resp) 299) success error)]
-                       [(:event e) {:request opts, :data data} (:params e)])]))))))
-     (.catch (fn [err]
-               (rf/dispatch [(:event error)
-                             (merge error {:request opts :error err})]))))))
+                       [(:event e) {:request opts, :data data} (:params e)])])))))))))
 
 
 (defn json-fetch [opts]
@@ -78,7 +63,7 @@
 
 (rf/reg-event-fx
  :xhr/done
- (fn [{db :db} [_ {{:keys [req-id] :as req} :request :as resp}]]
+ (fn [{db :db} [_ {{:keys [req-id]} :request :as resp}]]
    {:db (assoc-in db [:xhr :req req-id] resp)}))
 
 (rf/reg-event-fx

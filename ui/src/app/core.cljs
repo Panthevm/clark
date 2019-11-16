@@ -14,12 +14,11 @@
             [app.students.view]
             [app.profile.view]
             [app.schedule.view]
-            [app.schedule.show.view]
             [app.login.view]
 
             [app.routes]
-            [app.layout :refer [layout]]
-            [app.pages  :refer [pages]]))
+            [app.layout :as layout]
+            [app.pages  :as pages]))
 
 (def default-config
   {:base-url     "http://localhost:8080"
@@ -47,13 +46,14 @@
 (defn current-page []
   (let [route  @(rf/subscribe [:route-map/current-route])
         params (:params route)
-        page   (get @pages (:match route))]
-    [layout
+        page   (get @pages/pages (:match route))]
+    [layout/layout
      (if page
        [page params]
        [not-found-page])]))
 
 (defn mount-root []
+  (rf/clear-subscription-cache!)
   (rf/dispatch-sync [::initialize])
   (r/render [current-page] (.getElementById js/document "app")))
 

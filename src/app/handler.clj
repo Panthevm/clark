@@ -29,6 +29,5 @@
 
      ["/report"
       ["" {:get {:handler (fn [req] (report/-get req))}}]
-      ["/doc" {:get {:handler (fn [req] (report/-docx req))}}]]
-     ])
+      ["/doc" {:get {:handler (fn [req] (report/-docx req))}}]]])
    (constantly {:status 404, :body "not found"})))

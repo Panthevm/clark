@@ -1,5 +1,4 @@
 (ns zframes.xhr
-  (:require-macros [reagent.ratom :refer [reaction]])
   (:require [clojure.string :as str]
             [re-frame.db :as db]
             [zframes.redirect]
@@ -14,8 +13,6 @@
   (->> params
        (mapv (fn [[k v]] (str (name k) "=" v)))
        (str/join "&")))
-
-
 
 (defn *json-fetch [{:keys [uri headers params success error] :as opts}]
   (let [{token :token base-url :base-url}    (get-in @db/app-db [:xhr/config])

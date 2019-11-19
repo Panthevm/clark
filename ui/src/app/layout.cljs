@@ -22,29 +22,29 @@
              {:href (h/href "students") :title "Студенты"}]
      fragment (current-nav fragment))))
 
-(defn navbar [user]
+(defn navbar []
   (let [navs   (subscribe [::navigation])
-        user   (h/resource user)
+        user   (subscribe [:xhr/response :user])
         expand (r/atom false)]
     (fn []
-      [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
-       [:div.container
-        [:button.navbar-toggler {:on-click #(swap! expand not)}
-         [:i.far.fa-bars]]
-        [:div.navbar-collapse (when @expand {:class "collapse"})
-         [:div.navbar-nav.mr-auto
-          (map-indexed
-           (fn [idx link] ^{:key idx}
-             [:a.nav-item.nav-link link
-              (:title link)])
-           @navs)]
-         [:a.user-badge {:href "#/profile"}
-          [:span.username (h/remove-after (:username user) "@")]
-          [:i.far.fa-user-circle.faicon]]]]])))
+      (let [user (h/resource @user)]
+        [:nav.navbar.navbar-expand-lg.navbar-light.white.shadow-sm
+         [:div.container
+          [:button.navbar-toggler {:on-click #(swap! expand not)}
+           [:i.far.fa-bars]]
+          [:div.navbar-collapse (when @expand {:class "collapse"})
+           [:div.navbar-nav.mr-auto
+            (map-indexed
+             (fn [idx link] ^{:key idx}
+               [:a.nav-item.nav-link link
+                (:title link)])
+             @navs)]
+           [:a.user-badge {:href "#/profile"}
+            [:span.username (h/remove-after (:username user) "@")]
+            [:i.far.fa-user-circle.faicon]]]]]))))
 
 (defn layout []
-  (let [user (subscribe [:xhr/response :user])]
-    (fn [context]
-      [:div.app app-styles
-       (when user [navbar @user])
-       [:div.content-body context]])))
+  (fn [context]
+    [:div.app app-styles
+     [navbar]
+     [:div.content-body context]]))

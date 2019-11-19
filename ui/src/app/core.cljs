@@ -44,16 +44,16 @@
    [:h3 "Страница не найдена"]])
 
 (defn current-page []
-  (let [route  @(rf/subscribe [:route-map/current-route])
-        params (:params route)
-        page   (get @pages/pages (:match route))]
-    [layout/layout
-     (if page
-       [page params]
-       [not-found-page])]))
+  (let [route (rf/subscribe [:route-map/current-route])]
+    (fn []
+      (let [page   (get @pages/pages (:match @route))
+            params (:params @route)]
+        [layout/layout
+         (if page
+           [page params]
+           [not-found-page])]))))
 
-(defn mount-root []
-  (rf/clear-subscription-cache!)
+(defn ^:export mount-root []
   (rf/dispatch-sync [::initialize])
   (r/render [current-page] (.getElementById js/document "app")))
 

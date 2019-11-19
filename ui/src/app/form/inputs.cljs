@@ -43,7 +43,7 @@
   [form-path path & [{:keys [placeholder]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
         init-data      (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
-        on-change      #(rf/dispatch [(:on-search @node) {:q % :path path :form-path form-path}])
+        on-change      #(debounce/debounce [(:on-search @node) {:q % :path path :form-path form-path}])
         on-click       (fn [value]
                          (rf/dispatch [:zf/set-value form-path path value])
                          (rf/dispatch [:zf/dropdown  form-path path false])
@@ -57,7 +57,7 @@
                          (rf/dispatch [:zf/dropdown form-path path true])
                          (js/setTimeout #(.focus (:focus @state)) 100))]
     (fn [& _]
-      (let [{:keys [items loading display-path validators errors value dropdown default-items]} @node
+      (let [{:keys [items loading display-paths validators errors value dropdown default-items]} @node
             data (or items default-items)]
         [:div.combobox.mb-4
          [:div.input-group
@@ -67,7 +67,9 @@
           [:span.form-control.value {:on-click open-dropdown}
            (if (empty? value)
              [:text.text-muted placeholder]
-             (get-in value display-path))]]
+             [:text (str/join " " (mapv
+                                   (fn [path] (get-in value path))
+                                   display-paths))])]]
          (when validators
            [:div.invalid-feedback.d-block (str/join ", " (vals errors))])
          (when dropdown

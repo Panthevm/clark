@@ -13,9 +13,9 @@
                                    :fields {:date       {:type :string}
                                             :assessment {:type :collection
                                                          :item {:type :object}}}}}
-            :group         {:type         :string
-                            :display-path [:name]
-                            :on-search    ::event/group}
+            :group         {:type          :string
+                            :display-paths [[:name]]
+                            :on-search     ::event/group}
             :resource_type {:type :string}}})
 
 

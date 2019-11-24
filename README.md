@@ -1,7 +1,7 @@
 # RUN
-lein run
-make ui-repl
-eval -> ui/dev/user.clj -> (repl/start figwheel-options)
+- lein run
+- make ui-repl
+- eval -> ui/dev/user.clj -> (repl/start figwheel-options)
 
 #DEMO
 # ![Auth](https://sun9-40.userapi.com/c856128/v856128202/17c6a8/CqI9uYVgtu8.jpg)

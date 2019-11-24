@@ -9,6 +9,7 @@
 (def student-schema
   {:type   :form
    :fields {:student {:type      :object
+                      :display-paths [[:display]]
                       :on-click  ::students-report
                       :on-search ::event/student}}})
 

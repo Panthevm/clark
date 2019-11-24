@@ -15,25 +15,17 @@
        (mapv (fn [[k v]] (str (name k) "=" v)))
        (str/join "&")))
 
-
-
 (defn *json-fetch [{:keys [uri headers params success error] :as opts}]
   (let [{token :token base-url :base-url}    (get-in @db/app-db [:xhr/config])
         headers (merge (or headers {})
                        {"Content-Type" "application/json"
                         "authorization" (str "Bearer " token)})
-        abort-controller (js/AbortController.)
         fetch-opts (-> (merge {:method "get" :mode "cors" :credentials "same-origin"} opts)
                        (dissoc :uri :headers :success :error :params)
-                       (assoc :headers headers)
-                       (assoc :signal (.-signal abort-controller)))
+                       (assoc :headers headers))
         fetch-opts (cond-> fetch-opts
                      (:body opts) (assoc :body (.stringify js/JSON (clj->js (:body opts)))))
-        url (str base-url uri)
-        timeout-timer (js/setTimeout
-                       (fn []
-                         (.abort abort-controller))
-                       10000)]
+        url (str base-url uri)]
     (->
      (js/fetch (str url (when params (str "?" (to-query params)))) (clj->js fetch-opts))
      (.then

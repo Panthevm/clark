@@ -65,6 +65,7 @@
            [:span.icon
             (if dropdown [:i.far.fa-chevron-up] [:i.far.fa-chevron-down])]]
           [:span.form-control.value {:on-click open-dropdown}
+           (prn value)
            (if (empty? value)
              [:text.text-muted placeholder]
              [:text (str/join " " (mapv
@@ -72,18 +73,18 @@
                                    display-paths))])]]
          (when validators
            [:div.invalid-feedback.d-block (str/join ", " (vals errors))])
-         (when dropdown
+         (when (or dropdown (= 0 (last path)))
            [:div.menu
             [:div.spinnered.mt-1.input-group
              [:input.form-control.search {:ref         #(swap! state assoc :focus %)
-                                          :on-blur     (fn [] (js/setTimeout #(close-dropdown) 100))
+                                          :on-blur     (fn [] (js/setTimeout #(close-dropdown) 200))
                                           :placeholder "Поиск..."
                                           :on-change   #(on-change (.. % -target -value))}]
              (when loading
                [:div.input-group-appen
                 [:span.form-control
                  [:div.spinner-border.spinner-border-sm]]])]
-            [:div.shadow
+            [:div.shadow.items
              (if-not (empty? data)
                (map-indexed
                 (fn [idx {v :value d :display}] ^{:key idx}

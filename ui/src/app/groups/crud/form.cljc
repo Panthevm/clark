@@ -14,6 +14,7 @@
             :course        {:type :integer}
             :students      {:type :collection
                             :item {:type      :object
+                                   :display-paths [[:display]]
                                    :on-search ::events/student}}
             :resource_type {:type :string}}})
 

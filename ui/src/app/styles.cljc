@@ -79,6 +79,9 @@
     [:.content-body {:margin-top "40px"}]
     [:.form-row {:padding "5px"}]
     [:.combobox {:position "relative"}
+     [:.items {:overflow-y "auto"
+               :margin-bottom "100px"
+               :max-height "286px"}]
      [:.menu {:border "none"
               :z-index "99"
               :width "100%"
@@ -92,6 +95,7 @@
      [:.list-group-item:first-child
       {:border-radius "0"}]]
     [:.form {:padding "25px 0 25px 0"}
+     [:label {:margin "8px 0px 0px 0px"}]
      [:.form-control {:padding ".5rem"}
       [:&:focus {:background-color  "#e4e4e4"
                  :box-shadow "none"}]]

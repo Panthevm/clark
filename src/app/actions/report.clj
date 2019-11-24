@@ -55,7 +55,6 @@
 
 (defn -docx
   [{report :params}]
-  (prn report)
   (let [resp (-> (docx/transform (.getPath (io/resource "studentreport.docx"))
                                  [(schema/transformation :replace-text-inline "professor"  (:proffessor report))
                                   (schema/transformation :replace-text-inline "student"    (:student report))

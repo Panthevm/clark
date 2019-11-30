@@ -16,7 +16,7 @@
    (let [items (mapv (comp
                       (fn [{:keys [name] :as item}]
                         {:value   (select-keys item [:id :name :resource_type])
-                         :display [:text name]})
+                         :display [:span name]})
                       :resource)
                      data)]
      {:dispatch [:zf/update-node-schema form-path path (merge {:display-path [:name]

@@ -1,8 +1,20 @@
 (ns app.form.inputs
   (:require [re-frame.core  :as rf]
             [clojure.string :as str]
+            [app.helpers    :as h]
             [zenform.model :as model]
             [zframes.debounce :as debounce]))
+
+(defn ico-dropdown
+  [value]
+  (if value
+    [:i.far.fa-chevron-up]
+    [:i.far.fa-chevron-down]))
+
+(defn ico-spinner
+  [value]
+  (when value
+    [:div.spinner]))
 
 (rf/reg-event-db
  :zf/items
@@ -20,70 +32,56 @@
                 (assoc-in form (conj (model/get-node-path path) :dropdown)
                           open?)))))
 
-(defn field-type
-  [type]
-  (case type
-    :integer "number"
-    "text"))
-
 (defn input
   [form-path path & [attrs]]
   (let [node      (rf/subscribe [:zf/node form-path path])
         on-change #(rf/dispatch [:zf/set-value form-path path (.. % -target -value)])]
     (fn [& _]
-      (let [{:keys [value type]} @node]
-        [:div.input
+      (let [{:keys [value]} @node]
+        [:div.input-group
          [:input.form-control {:id                (name (first path))
                                :class             (:class attrs)
                                :key                (name (first path))
-                               :type              (:type attrs)
                                :on-change         on-change
                                :value             (or value "")}]]))))
+
 (defn *combobox
   [form-path path & [{:keys [placeholder]}]]
   (let [node           (rf/subscribe [:zf/node form-path path])
-        init-data      (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
+        _              (rf/dispatch  [(:on-search @node) {:path path :form-path form-path}])
         on-change      #(debounce/debounce [(:on-search @node) {:q % :path path :form-path form-path}])
         on-click       (fn [value]
-                         (rf/dispatch [:zf/set-value form-path path value])
-                         (rf/dispatch [:zf/dropdown  form-path path false])
-                         (when-let [click (:on-click @node)]
-                           (rf/dispatch [click value])))
+                         (h/dispatch-n [[:zf/set-value form-path path value]
+                                        (when-let [click (:on-click @node)]
+                                          [click value])]))
         close-dropdown (fn []
-                         (rf/dispatch [:zf/dropdown form-path path false])
-                         (rf/dispatch [:zf/items    form-path path (:default-items @node)]))
+                         (h/dispatch-n [[:zf/dropdown form-path path false]
+                                        [:zf/items    form-path path (:default-items @node)]]))
         state          (atom {})
         open-dropdown  (fn []
                          (rf/dispatch [:zf/dropdown form-path path true])
                          (js/setTimeout #(.focus (:focus @state)) 100))]
     (fn [& _]
-      (let [{:keys [items loading display-paths validators errors value dropdown default-items]} @node
+      (let [{:keys [items loading display-paths value dropdown default-items]} @node
             data (or items default-items)]
         [:div.combobox.mb-4
-         [:div.input-group
-          [:div.input-group-append {:on-click open-dropdown}
-           [:span.icon
-            (if dropdown [:i.far.fa-chevron-up] [:i.far.fa-chevron-down])]]
-          [:span.form-control.value {:on-click open-dropdown}
-           (prn value)
+         [:div.input-group {:on-click open-dropdown}
+          [:div.input-group-append
+           [:span.icon [ico-dropdown dropdown]]]
+          [:span.form-control
            (if (empty? value)
-             [:text.text-muted placeholder]
-             [:text (str/join " " (mapv
+             [:span.text-muted placeholder]
+             [:span (str/join " " (mapv
                                    (fn [path] (get-in value path))
                                    display-paths))])]]
-         (when validators
-           [:div.invalid-feedback.d-block (str/join ", " (vals errors))])
-         (when (or dropdown (= 0 (last path)))
+         (when dropdown
            [:div.menu
-            [:div.spinnered.mt-1.input-group
+            [:div.input-group
              [:input.form-control.search {:ref         #(swap! state assoc :focus %)
-                                          :on-blur     (fn [] (js/setTimeout #(close-dropdown) 200))
+                                          :on-blur     close-dropdown
                                           :placeholder "Поиск..."
                                           :on-change   #(on-change (.. % -target -value))}]
-             (when loading
-               [:div.input-group-appen
-                [:span.form-control
-                 [:div.spinner-border.spinner-border-sm]]])]
+             [ico-spinner loading]]
             [:div.shadow.items
              (if-not (empty? data)
                (map-indexed

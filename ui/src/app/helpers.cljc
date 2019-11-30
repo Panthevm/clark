@@ -1,7 +1,13 @@
 (ns app.helpers
   (:require [clojure.string :as str]
             [chrono.core    :as cc]
+            [re-frame.core  :as rf]
             [chrono.now     :as cn]))
+
+(defn dispatch-n [events]
+  (doseq [event events]
+    (when event
+      (rf/dispatch event))))
 
 (defn href [& parts]
   (str "#/" (str/join "/" parts)))

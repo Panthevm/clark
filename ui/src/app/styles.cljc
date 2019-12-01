@@ -1,10 +1,5 @@
 (ns app.styles
-  (:require
-   [garden.stylesheet :as stylesheet]
-   [garden.core :as garden]))
-
-(defn rule [tag attrs]
-  ((stylesheet/rule tag) attrs))
+  (:require [garden.core :as garden]))
 
 (defn style [css]
   [:style (garden/css css)])
@@ -12,7 +7,6 @@
 (def app-styles
   (style
    [:body {:background-color "#e4e4e4"
-           :margin           "0px"
            :font-size        "15px"
            :font-family      "GothamPro"
            :height           "100%"}
@@ -26,7 +20,7 @@
     [:.sticky-table {:overflow-x "scroll"
                      :overflow-y "visible"}
      [:th {:border-top "none"}]
-     [(keyword (str "th:nth-child(2)")) {:padding-left "145px"}]
+     [(keyword "th:nth-child(2)") {:padding-left "145px"}]
      [:th :td {:white-space    "nowrap"
                :vertical-align "middle"}]
      [:.first-col {:padding-left "150px"}]
@@ -54,13 +48,15 @@
                 :border-right   "1px solid #d0d0d0"}]]
      [:.line {:height "43px"}]]
     [:.navbar {:border-radius "0 0 12px 12px"}]
-    [:.bord {:border-radius "12px"}]
+    [:.bord {:border-radius "16px"}]
     [:.point {:cursor "pointer"}]
     [:.i-list
      [:i {:padding-left "10px"}]]
-    [:.create {:background-color "#d5d5d5"}]
+    [:.create {:border-radius    "16px"
+               :background-color "#d5d5d5"}]
     [:.btn-form
      [:.btn {:background-color "#d5d5d5"
+             :border-radius    "16px"
              :margin-top       "24px"
              :margin-right     "12px"}]]
     [:.delete-ico {:font-size     "22px"
@@ -80,7 +76,8 @@
     [:.list-segment {:padding       "25px"
                      :margin-top    "26px"
                      :border-radius "25px"}]
-    [:.segment {:padding          "25px"
+    [:.segment {:padding          "24px"
+                :margin-bottom    "24px"
                 :background-color "#ffffff"
                 :box-shadow       "0 .5rem 1rem rgba(0,0,0,.15)"
                 :height           "max-content"
@@ -120,8 +117,10 @@
               :border-radius ".25em 0 0 .25em"
               :display       "flex"}]
      [:.search {:border-radius ".25em .25em 0 0"}]
-     [:.list-group-item:first-child
-      {:border-radius "0"}]]
+     [:.list-group-item:first-child {:border-radius "0"}]]
+    [:.list-group
+     [:.list-group-item:first-child {:border-radius "15px 15px 0px 0px"}]
+     [:.list-group-item:last-child {:border-radius "0px 0px 15px 15px"}]]
     [:.form {:padding "25px 0 25px 0"}
      [:label {:margin "8px 0px 0px 0px"}]
      [:.form-control {:padding ".5rem"}

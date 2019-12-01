@@ -1,19 +1,19 @@
 (ns app.layout
-  (:require [re-frame.core  :refer [reg-sub subscribe]]
+  (:require [re-frame.core  :as    rf]
             [reagent.core   :as    r]
-            [app.styles     :refer [app-styles]]
-            [clojure.string :refer [includes?]]
+            [app.styles     :as    styles]
+            [clojure.string :as    str]
             [app.helpers    :as    h]))
 
 (defn current-nav [fragment navs]
   (map
    (fn [link]
-     (if (includes? fragment (:href link))
+     (if (str/includes? fragment (:href link))
        (assoc link :class "active font-weight-bold")
        link))
    navs))
 
-(reg-sub
+(rf/reg-sub
  ::navigation
  :<- [:route-map/fragment]
  (fn [fragment]
@@ -23,8 +23,8 @@
      fragment (current-nav fragment))))
 
 (defn navbar []
-  (let [navs   (subscribe [::navigation])
-        user   (subscribe [:xhr/response :user])
+  (let [navs   (rf/subscribe [::navigation])
+        user   (rf/subscribe [:xhr/response :user])
         expand (r/atom false)]
     (when @user
       (fn []
@@ -46,6 +46,6 @@
 
 (defn layout []
   (fn [context]
-    [:div.app app-styles
+    [:div.app styles/app-styles
      [navbar]
      [:div.content-body context]]))

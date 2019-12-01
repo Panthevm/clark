@@ -1,13 +1,23 @@
 (ns app.helpers
-  (:require [clojure.string :as str]
-            [chrono.core    :as cc]
-            [re-frame.core  :as rf]
-            [chrono.now     :as cn]))
+  (:require [clojure.string   :as str]
+            [chrono.core      :as cc]
+            [re-frame.core    :as rf]
+            [chrono.now       :as cn])
+  #?(:cljs (:import [goog.async Debouncer])))
 
 (defn dispatch-n [events]
   (doseq [event events]
     (when event
       (rf/dispatch event))))
+
+(defn redirect-search
+  [search]
+  (rf/dispatch [:zframes.redirect/set-params {:search search}]))
+
+(def search
+  #?(:clj redirect-search
+     :cljs (let [debouncer (Debouncer. redirect-search 300)]
+             (fn [e] (->> e .-target .-value (.fire debouncer))))))
 
 (defn href [& parts]
   (str "#/" (str/join "/" parts)))

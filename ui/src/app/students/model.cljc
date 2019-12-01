@@ -1,15 +1,15 @@
 (ns app.students.model
-  (:require [re-frame.core :as rf]
-            [app.helpers   :as h]))
+  (:require [re-frame.core :as rf]))
 
 (def index-page ::index)
 
 (rf/reg-event-fx
  index-page
- (fn [_ [_ phase]]
+ (fn [_ [_ phase {{q :search} :params}]]
    (case phase
-     :init {:method/get {:resource {:type :student}
-                         :req-id   :student}}
+     (:init :params) {:method/get {:resource {:type :student}
+                                   :params   {:ilike q}
+                                   :req-id   :student}}
      nil)))
 
 (rf/reg-sub

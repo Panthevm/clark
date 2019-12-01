@@ -58,10 +58,6 @@
                                 (cond
                                   (or (nil? op) (not= np op))
                                   (conj acc [k :init n-params])
-
-                                  ;(and op (= (:.. np) route))     ;; Need to rethink this
-                                  ;(conj acc [k :return n-params])
-
                                   :else acc)))
                             to-dispose new-contexts)]
     to-dispatch))
@@ -116,11 +112,6 @@
              params (assoc params :search (:location/search db))
              route-match (:match route)
              route {:match route-match :params params :parents (:parents route)}
-             contexts (reduce (fn [acc {ctx :context, r :.}]
-                                (if ctx
-                                  (assoc acc ctx (assoc params :.. r
-                                                               :. route-match))
-                                  acc)) {} (:parents route))
              current-page (:match route)
              old-page     (get-in db [:route-map/current-route :match])
              old-params (get-in db [:route-map/current-route :params])
@@ -141,15 +132,13 @@
                                  true (conj [current-page :init params])))
 
              old-contexts (:route/context db)
-             context-evs (contexts-diff (:match route) old-contexts contexts params old-params) 
+             context-evs (contexts-diff (:match route) old-contexts {} params old-params)
              evs (into page-ctx-events context-evs)]
          {:db (assoc db
-                     :route/history (conj (take 4 (:route/history db)) {:route (:match route) :uri fragment})
                      :fragment fragment
                      :fragment-params params
                      :fragment-path path
                      :fragment-query-string qs
-                     :route/context contexts
                      :route-map/current-route route)
          :dispatch-n evs})
        {:db (assoc db

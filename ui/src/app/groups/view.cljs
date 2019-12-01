@@ -13,20 +13,19 @@
 (pages/reg-subs-page
  model/index-page
  (fn [{:keys [items]}]
-   [:div
-    [:div.container.segment.shadow.white
+   [:div.container
+    [:div.segment
      [:h2 "Группы"]
      [:div.form-row
       [:div.flex-grow-1
        [:input.form-control.bord]]
       [:div.flex-shrink-1
        [:a {:href (href "groups" "create")}
-        [:button.btn.bord.shadow-sm.create.ml-1 "Создать"]]]]]
-    [:div.container.list-segment.shadow.white
+        [:button.btn.create.ml-1 "Создать"]]]]]
+    [:div.segment
      [:div.list-group.list-group-flush
       (when (empty? items)
-        [:a.list-group-item
-         [:span "Нет данных"]])
+        [:a.list-group-item [:span "Нет данных"]])
       (map-indexed
        (fn [idx item] ^{:key idx} [Item item])
        items)]]]))

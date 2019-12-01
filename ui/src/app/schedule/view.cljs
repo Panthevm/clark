@@ -16,23 +16,21 @@
 (pages/reg-subs-page
  model/index-page
  (fn [{:keys [items]}]
-   [:div
-    [:div.container.segment.shadow.white
+   [:div.container
+    [:div.segment
      [:h2 "Журналы"]
      [:div.form-row
       [:div.flex-grow-1
        [:input.form-control.bord]]
       [:div.flex-shrink-1
-       [:button.btn.bord.shadow-sm.create.ml-1
+       [:button.btn.create.ml-1
         {:on-click #(rf/dispatch [:redirect (href "schedule" "create")])}
         "Создать"]]]]
-    [:div.container.list-segment.shadow.white
+    [:div.segment
      [:div.list-group.list-group-flush
-      (when (empty? items)
-        [:a.list-group-item
-         [:span "Нет данных"]])
-      (map-indexed 
-       (fn [idx item] ^{:key idx}
-         [Item item])
-       items)]]]))
-
+      (if (empty? items)
+        [:a.list-group-item [:span "Нет данных"]]
+        (map-indexed
+         (fn [idx item] ^{:key idx}
+           [Item item])
+         items))]]]))

@@ -121,7 +121,7 @@
     [:.list-group
      [:.list-group-item:first-child {:border-radius "15px 15px 0px 0px"}]
      [:.list-group-item:last-child {:border-radius "0px 0px 15px 15px"}]]
-    [:.form {:padding "25px 0 25px 0"}
+    [:.form
      [:label {:margin "8px 0px 0px 0px"}]
      [:.form-control {:padding ".5rem"}
       [:&:focus {:background-color "#e4e4e4"

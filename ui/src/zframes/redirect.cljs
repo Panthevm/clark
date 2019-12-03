@@ -14,6 +14,11 @@
                     (window-location/gen-query-string params))))))
 
 (rf/reg-event-fx
+ :redirect
+ (fn [_ [_ opts]]
+   {:redirect {:uri opts}}))
+
+(rf/reg-event-fx
  ::set-params
  (fn [{db :db} [_ params]]
    (let [pth (get db :fragment-path)]
